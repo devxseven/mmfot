@@ -667,7 +667,6 @@
                     autoplay: true,
                     isLive: true,
                     fullscreenWeb: true,
-                    fullscreen: true,
                     autoOrientation: true,
                     layers: [{
                         html: '<span style="color:yellow; font-weight: 700; font-size: smaller;">mmfot.com</span>',
@@ -685,50 +684,54 @@
                         position: 'left',
                         html: '<span class="dot" style="height: 6px; width: 6px; background-color: red; border-radius: 50%; display: inline-block; margin-right: 5px;"></span><span style="color:white; font-weight: 900; font-size: smaller;">Live</span>',
                         index: 40,
+                    }, {
+                        position: 'right',
+                        html: `
+                        <i class="art-icon art-icon-fullscreenWebOnCus" style="display: inline-flex;">
+                            <svg class="icon" width="22" height="22" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+                                <path fill="#fff" d="M625.778 256H768v142.222h113.778v-256h-256V256zM256 398.222V256h142.222V142.222h-256v256H256zm512 227.556V768H625.778v113.778h256v-256H768zM398.222 768H256V625.778H142.222v256h256V768z"></path>
+                            </svg>
+                        </i>
+                        <i class="art-icon art-icon-fullscreenWebOffCus" style="display: none;">
+                            <svg class="icon" width="22" height="22" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+                                <path fill="#fff" d="M768 298.667h170.667V384h-256V128H768v170.667zM341.333 384h-256v-85.333H256V128h85.333v256zM768 725.333V896h-85.333V640h256v85.333H768zM341.333 640v256H256V725.333H85.333V640h256z"></path>
+                            </svg>
+                        </i>
+                    `,
+                        tooltip: 'Fullscreen',
+                        index: 100,
+                        click: async function () {
+                            // Helper function to wrap tg.CloudStorage.getItem in a Promise
+                            const getFullscreenSetting = () => {
+                                return new Promise((resolve, reject) => {
+                                    tg.CloudStorage.getItem('fullscreen', (err, value) => {
+                                        if (err) reject(err);
+                                        else resolve(value);
+                                    });
+                                });
+                            };
+                            // Helper function for 1-second delay
+                            const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+                            try {
+                                const value = await getFullscreenSetting();
+                                if (value === 'no') {
+                                    if (!art.fullscreenWeb) {
+                                        await Telegram.WebApp.requestFullscreen(); // Assumes requestFullscreen returns a Promise
+                                        await delay(1000); // 1-second delay
+                                        art.fullscreenWeb = !art.fullscreenWeb;
+                                    } else {
+                                        Telegram.WebApp.exitFullscreen(); // Assumes exitFullscreen is synchronous
+                                        art.fullscreenWeb = !art.fullscreenWeb;
+                                    }
+                                } else {
+                                    art.fullscreenWeb = !art.fullscreenWeb;
+                                }
+                            } catch (err) {
+                                console.error('Error accessing fullscreen setting:', err);
+                            }
+                        },
                     }],
-                    //         , {
-                    //             position: 'right',
-                    //             html: `
-                    //     <i class="art-icon art-icon-fullscreenWebOnCus" style="display: inline-flex;">
-                    //         <svg class="icon" width="22" height="22" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
-                    //             <path fill="#fff" d="M625.778 256H768v142.222h113.778v-256h-256V256zM256 398.222V256h142.222V142.222h-256v256H256zm512 227.556V768H625.778v113.778h256v-256H768zM398.222 768H256V625.778H142.222v256h256V768z"></path>
-                    //         </svg>
-                    //     </i>
-                    //     <i class="art-icon art-icon-fullscreenWebOffCus" style="display: none;">
-                    //         <svg class="icon" width="22" height="22" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
-                    //             <path fill="#fff" d="M768 298.667h170.667V384h-256V128H768v170.667zM341.333 384h-256v-85.333H256V128h85.333v256zM768 725.333V896h-85.333V640h256v85.333H768zM341.333 640v256H256V725.333H85.333V640h256z"></path>
-                    //         </svg>
-                    //     </i>
-                    // `,
-                    //             tooltip: 'Fullscreen',
-                    //             index: 100,
-                    //             click: function () {
-                    //                 tg.CloudStorage.getItem('fullscreen', function (err, value) {
-                    //                     if (!err && value) {
-                    //                         if (value === 'no') {
-                    //                             if (art.fullscreenWeb) {
-                    //                                 Telegram.WebApp.requestFullscreen();
-                    //                             } else {
-                    //                                 Telegram.WebApp.exitFullscreen();
-                    //                             }
-                    //                             const onIcon = document.querySelector('.art-icon-fullscreenWebOnCus');
-                    //                             const offIcon = document.querySelector('.art-icon-fullscreenWebOffCus');
-                    //                             if (!onIcon || !offIcon) {
-                    //                                 console.error('Fullscreen icons not found in click handler:', this.innerHTML);
-                    //                                 return;
-                    //                             }
-                    //                             if (typeof art.fullscreenWeb !== 'boolean') {
-                    //                                 console.error('art.fullscreenWeb is not a boolean:', art.fullscreenWeb, 'Type:', typeof art.fullscreenWeb);
-                    //                                 return;
-                    //                             }
-                    //                             art.fullscreenWeb = !art.fullscreenWeb;
-                    //                             onIcon.style.display = art.fullscreenWeb ? 'none' : 'inline-flex';
-                    //                             offIcon.style.display = art.fullscreenWeb ? 'inline-flex' : 'none';
-                    //                         }
-                    //                     }
-                    //                 });
-                    //             },
-                    //         }],
                     customType: {
                         m3u8: function (video, url, art) {
                             if (Hls.isSupported()) {
@@ -763,27 +766,49 @@
                     const artPlayer = document.getElementById('art-player');
                     const controlsLeft = artPlayer.querySelector('.art-video-player.art-mobile .art-controls-left');
                     const videoLeft = artPlayer.querySelector('.art-video-player.art-mobile .art-video');
-                    // tg.CloudStorage.getItem('fullscreen', function (err, value) {
-                    //     if (!err && value) {
-                    //         if (value === 'no') {
-                    //             if (!state) {
-                    //                 Telegram.WebApp.exitFullscreen();
-                    //             }
-                    //         }
-                    //     }
-                    // });
-                    if (state) { // fullscreenWeb is true
-                        if (videoLeft) {
-                            videoLeft.style.position = 'absolute';
-                            videoLeft.style.left = `var(--tg-safe-area-inset-top, 0px)`;
+
+                    // Helper function to wrap tg.CloudStorage.getItem in a Promise
+                    const getFullscreenSetting = () => {
+                        return new Promise((resolve, reject) => {
+                            tg.CloudStorage.getItem('fullscreen', (err, value) => {
+                                if (err) reject(err);
+                                else resolve(value);
+                            });
+                        });
+                    };
+
+                    // Async function to handle fullscreen state
+                    (async () => {
+                        try {
+                            const value = await getFullscreenSetting();
+                            if (value === 'no' && !state) {
+                                Telegram.WebApp.exitFullscreen();
+                            }
+                        } catch (err) {
+                            console.error('Error accessing fullscreen setting:', err);
                         }
-                        controlsLeft.style.paddingLeft = `calc(var(--tg-safe-area-inset-top, 0px) + var(--tg-content-safe-area-inset-top, 0px) + 15px)`;
-                    } else { // fullscreenWeb is false
-                        if (videoLeft) {
-                            videoLeft.style.left = '0';
+
+                        if (state) { // fullscreenWeb is true
+                            if (videoLeft) {
+                                videoLeft.style.position = 'absolute';
+                                videoLeft.style.left = `var(--tg-safe-area-inset-top, 0px)`;
+                            }
+                            controlsLeft.style.paddingLeft = `calc(var(--tg-safe-area-inset-top, 0px) + var(--tg-content-safe-area-inset-top, 0px) + 15px)`;
+                        } else { // fullscreenWeb is false
+                            if (videoLeft) {
+                                videoLeft.style.left = '0';
+                            }
+                            controlsLeft.style.paddingLeft = '0';
                         }
-                        controlsLeft.style.paddingLeft = '0';
-                    }
+                        const onIcon = document.querySelector('.art-icon-fullscreenWebOnCus');
+                        const offIcon = document.querySelector('.art-icon-fullscreenWebOffCus');
+                        if (!onIcon || !offIcon) {
+                            console.error('Fullscreen icons not found in click handler:', this.innerHTML);
+                            return;
+                        }
+                        onIcon.style.display = state ? 'none' : 'inline-flex';
+                        offIcon.style.display = state ? 'inline-flex' : 'none';
+                    })();
                 });
             },
 
