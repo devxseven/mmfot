@@ -12,6 +12,7 @@
     <script
         src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.43/moment-timezone-with-data.min.js"></script>
     <!-- <script src='//whephiwums.com/sdk.js' data-zone='9233664' data-sdk='show_9233664'></script> -->
+    <script src="https://js.mbidadm.com/in-stream-ad-admanager/tma.js"></script>
     <style>
         html {
             overscroll-behavior-x: none;
@@ -152,7 +153,11 @@
         <h2 class="text-xl font-bold my-4">Football Games</h2>
         <div class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 gap-4" id="gameList"></div>
     </section>
-
+    <script async src="https://js.mbidadm.com/static/scripts.js" data-admpid="324475"></script>
+    <script>
+    
+        window.initCdTma?.({ id: 2008250 }).then(show => window.show = show).catch(e => console.log(e))
+      </script>
     <script>
         const tg = window.Telegram.WebApp;
         tg.ready();
@@ -469,7 +474,15 @@
                             //     window.location.href = `player.html?id=${match.id}`;
                             // });
 
-                            window.location.href = `player.html?id=${match.id}`;
+                            window.show?.().then(() => {
+                                console.log('tma ad played')
+                                window.location.href = `player.html?id=${match.id}`;
+                            }).catch(error => {
+                                console.error('Error showing ad:', error);
+                                window.location.href = `player.html?id=${match.id}`;
+                            });
+
+                            
 
 
                         }
