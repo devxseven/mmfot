@@ -674,8 +674,17 @@
                     /**
  * This function shows an interstitial ad and handles lifecycle events with callbacks.
  */
-                    showInterstitialAd();
-                    window.location.href = `game.html?url=${encodeURIComponent(game.embed)}`;
+                    window.Sonar.show({
+                        adUnit: 'rwmmfot', // ad unit name from admin
+                        onReward: () => {
+                            window.location.href = `game.html?url=${encodeURIComponent(game.embed)}`;
+                        },
+                    }).then((showResult) => {
+                        if (showResult?.status === 'error') {
+                            alert('Rewarded ads didn\'t filled');
+                            window.location.href = `game.html?url=${encodeURIComponent(game.embed)}`;
+                        }
+                    });
                     // window.Sonar.show({ adUnit: "intmmfot" })
                     //     .then((result) => {
                     //         // You still can handle the result of the ad display attempt by awaiting Promise
