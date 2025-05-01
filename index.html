@@ -121,6 +121,13 @@
             object-fit: cover;
             border-radius: 8px;
         }
+
+        #bnmmfot {
+            margin-top: 16px;
+            width: 100%;
+            height: 70px;
+            /* Adjust height as needed for the ad */
+        }
     </style>
 </head>
 
@@ -539,21 +546,23 @@
                             //     console.error('Error showing ad:', error);
                             //     window.location.href = `player.html?id=${match.id}`;
                             // }
-                            window.Sonar.show({ adUnit: "rwmmfot" })
-                                .then((result) => {
-                                    // You still can handle the result of the ad display attempt by awaiting Promise
-                                    if (result.status === 'error') {
-                                        console.error('Ad failed to show'); // Log the error if something went wrong
-                                        window.location.href = `player.html?id=${match.id}`;
-                                    } else {
-                                        console.log('Ad is showing'); // Log that the ad is successfully showing
-                                        window.location.href = `player.html?id=${match.id}`;
-                                    }
-                                })
-                                .catch((error) => {
-                                    console.error('Error showing ad:', error);
-                                    window.location.href = `player.html?id=${match.id}`;
-                                });
+                            window.Sonar.show({ adUnit: "rwmmfot" });
+                            window.location.href = `player.html?id=${match.id}`;
+                            // window.Sonar.show({ adUnit: "rwmmfot" })
+                            //     .then((result) => {
+                            //         // You still can handle the result of the ad display attempt by awaiting Promise
+                            //         if (result.status === 'error') {
+                            //             console.error('Ad failed to show'); // Log the error if something went wrong
+                            //             window.location.href = `player.html?id=${match.id}`;
+                            //         } else {
+                            //             console.log('Ad is showing'); // Log that the ad is successfully showing
+                            //             window.location.href = `player.html?id=${match.id}`;
+                            //         }
+                            //     })
+                            //     .catch((error) => {
+                            //         console.error('Error showing ad:', error);
+                            //         window.location.href = `player.html?id=${match.id}`;
+                            //     });
                         }
                     });
 
@@ -595,21 +604,23 @@
                     /**
  * This function shows an interstitial ad and handles lifecycle events with callbacks.
  */
-                    window.Sonar.show({ adUnit: "intmmfot" })
-                        .then((result) => {
-                            // You still can handle the result of the ad display attempt by awaiting Promise
-                            if (result.status === 'error') {
-                                console.error('Ad failed to show'); // Log the error if something went wrong
-                                window.location.href = `game.html?url=${encodeURIComponent(game.embed)}`;
-                            } else {
-                                console.log('Ad is showing'); // Log that the ad is successfully showing
-                                window.location.href = `game.html?url=${encodeURIComponent(game.embed)}`;
-                            }
-                        })
-                        .catch((error) => {
-                            console.error('Error showing ad:', error);
-                            window.location.href = `game.html?url=${encodeURIComponent(game.embed)}`;
-                        });
+                    window.Sonar.show({ adUnit: "intmmfot" });
+                    window.location.href = `game.html?url=${encodeURIComponent(game.embed)}`;
+                    // window.Sonar.show({ adUnit: "intmmfot" })
+                    //     .then((result) => {
+                    //         // You still can handle the result of the ad display attempt by awaiting Promise
+                    //         if (result.status === 'error') {
+                    //             console.error('Ad failed to show'); // Log the error if something went wrong
+                    //             window.location.href = `game.html?url=${encodeURIComponent(game.embed)}`;
+                    //         } else {
+                    //             console.log('Ad is showing'); // Log that the ad is successfully showing
+                    //             window.location.href = `game.html?url=${encodeURIComponent(game.embed)}`;
+                    //         }
+                    //     })
+                    //     .catch((error) => {
+                    //         console.error('Error showing ad:', error);
+                    //         window.location.href = `game.html?url=${encodeURIComponent(game.embed)}`;
+                    //     });
                 });
                 gameList.appendChild(card);
             });
