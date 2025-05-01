@@ -128,11 +128,53 @@
             height: 70px;
             /* Adjust height as needed for the ad */
         }
+
+        #bn2mmfot {
+            margin-bottom: 16px;
+            width: 100%;
+            height: 70px;
+            /* Adjust height as needed for the ad */
+        }
+
+        /* Loading overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .loading-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .loading-overlay .spinner {
+            width: 60px;
+            height: 60px;
+            border: 6px solid rgba(255, 255, 255, 0.3);
+            border-top: 6px solid #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
     </style>
 </head>
 
 <body>
+    <div class="loading-overlay" id="adLoadingOverlay">
+        <div class="spinner"></div>
+    </div>
     <section>
+        <div id="bn2mmfot"> </div>
         <div class="flex gap-3 justify-center">
             <button id="fullscreen_btn"
                 class="btn text-[11px] md:text-[14px] px-3 py-1 mb-4 rounded-lg shadow-lg button h-auto min-h-[40px]">
@@ -217,77 +259,8 @@
     </script> -->
 
     <script>
+        window.Sonar.show({ adUnit: "bn2mmfot" });
         window.Sonar.show({ adUnit: "bnmmfot" });
-        const showInterstitialAd = () => {
-            window.Sonar.show({
-                adUnit: 'intmmfot', // Use the same ad unit as in your original code
-
-                loader: false, // Optional, switch on/off loader showing before ad. Default: true
-
-                onStart: () => {
-                    console.log('Ad started loading');
-                },
-
-                onShow: () => {
-                    console.log('Ad is now visible');
-                },
-
-                onError: () => {
-                    console.error('Ad encountered an error');
-                },
-
-                onClose: () => {
-                    console.log('Ad was closed');
-                },
-            }).then((result) => {
-                if (result.status === 'error') {
-                    console.error('Ad failed to show');
-                } else {
-                    console.log('Ad is showing');
-                }
-            });
-        };
-        /**
- * This function shows a rewarded ad and handles lifecycle events with callbacks.
- */
-        const showRewardedAd = () => {
-            window.Sonar.show({
-                adUnit: 'rwmmfot', // Replace with your actual rewarded ad unit name
-
-                loader: false, // optional, switch on / off loader showing before ad. Default: true
-
-                onStart: () => {
-                    // Add logic here for when the ad starts to load
-                    console.log('Ad started loading');
-                },
-
-                onShow: () => {
-                    // Add logic here for when the ad becomes visible to the user
-                    console.log('Ad is now visible');
-                },
-
-                onError: () => {
-                    // Handle any errors that occur during the ad lifecycle
-                    console.error('Ad encountered an error');
-                },
-
-                onClose: () => {
-                    // Add logic here for when the ad is closed (e.g., resume content, show next step)
-                    console.log('Ad was closed');
-                },
-
-                onReward: () => {
-                    // Handle giving the user their reward here (e.g., unlocking content or in-game currency)
-                    console.log('User has been rewarded for watching the Ad');
-                },
-            }).then((result) => {
-                if (result.status === 'error') {
-                    console.error('Ad failed to show');
-                } else {
-                    console.log('Ad is showing');
-                }
-            });
-        };
     </script>
     <script>
         const tg = window.Telegram.WebApp;
@@ -616,15 +589,18 @@
                             //     console.error('Error showing ad:', error);
                             //     window.location.href = `player.html?id=${match.id}`;
                             // }
+                            document.getElementById('adLoadingOverlay').classList.add('active');
                             window.Sonar.show({
                                 adUnit: 'intmmfot', // ad unit name from admin
                                 loader: false,
                                 onClose: () => {
+                                    document.getElementById('adLoadingOverlay').classList.remove('active');
                                     window.location.href = `player.html?id=${match.id}`;
                                 },
                             }).then((showResult) => {
                                 if (showResult?.status === 'error') {
                                     alert('Interstitial ads didn\'t filled');
+                                    document.getElementById('adLoadingOverlay').classList.remove('active');
                                     window.location.href = `player.html?id=${match.id}`;
                                 }
                             });
@@ -684,15 +660,18 @@
                     /**
  * This function shows an interstitial ad and handles lifecycle events with callbacks.
  */
+                    document.getElementById('adLoadingOverlay').classList.add('active');
                     window.Sonar.show({
                         adUnit: 'rwmmfot', // ad unit name from admin
                         loader: false,
                         onReward: () => {
+                            document.getElementById('adLoadingOverlay').classList.remove('active');
                             window.location.href = `game.html?url=${encodeURIComponent(game.embed)}`;
                         },
                     }).then((showResult) => {
                         if (showResult?.status === 'error') {
                             alert('Rewarded ads didn\'t filled');
+                            document.getElementById('adLoadingOverlay').classList.remove('active');
                             window.location.href = `game.html?url=${encodeURIComponent(game.embed)}`;
                         }
                     });
