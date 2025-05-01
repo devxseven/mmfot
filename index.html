@@ -12,8 +12,9 @@
     <script
         src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.43/moment-timezone-with-data.min.js"></script>
     <!-- <script src='//whephiwums.com/sdk.js' data-zone='9233664' data-sdk='show_9233664'></script> -->
-    <script src="https://js.mbidadm.com/in-stream-ad-admanager/tma.js"></script>
-    <script src="https://w.tads.me/widget.js" async></script>
+    <!-- <script src="https://js.mbidadm.com/in-stream-ad-admanager/tma.js"></script>
+    <script src="https://w.tads.me/widget.js" async></script> -->
+    <script src="https://static.sonartech.io/lib/1.0.0/sonar.js?appId=app_9eebc533&isDebug=true"></script>
     <style>
         html {
             overscroll-behavior-x: none;
@@ -151,11 +152,11 @@
         <div id="loader" class="loader">
             <div class="spinner"></div>
         </div>
-        <div id="tads-container-457"></div>
-        <h2 class="text-xl font-bold my-4">Football Games</h2>
+        <div id="bnmmfot"> </div>
+        <h2 class="text-xl font-bold my-4">Sports Games</h2>
         <div class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 gap-4" id="gameList"></div>
     </section>
-    <script>
+    <!-- <script>
 
         window.initCdTma?.({ id: 2008250 }).then(show => window.show = show).catch(e => console.log(e))
     </script>
@@ -206,8 +207,11 @@
         } else {
             initTadsWidget();
         }
-    </script>
+    </script> -->
 
+    <script>
+        window.Sonar.show({ adUnit: "bnmmfot" });
+    </script>
     <script>
         const tg = window.Telegram.WebApp;
         tg.ready();
@@ -523,24 +527,33 @@
                             //     console.error('Error showing ad:', error);
                             //     window.location.href = `player.html?id=${match.id}`;
                             // });
-                            try {
-                                window.show?.().then(() => {
-                                    console.log('tma ad played')
-                                    window.location.href = `player.html?id=${match.id}`;
-                                }).catch(error => {
+                            // try {
+                            //     window.show?.().then(() => {
+                            //         console.log('tma ad played')
+                            //         window.location.href = `player.html?id=${match.id}`;
+                            //     }).catch(error => {
+                            //         console.error('Error showing ad:', error);
+                            //         window.location.href = `player.html?id=${match.id}`;
+                            //     });
+                            // } catch (error) {
+                            //     console.error('Error showing ad:', error);
+                            //     window.location.href = `player.html?id=${match.id}`;
+                            // }
+                            window.Sonar.show({ adUnit: "rwmmfot" })
+                                .then((result) => {
+                                    // You still can handle the result of the ad display attempt by awaiting Promise
+                                    if (result.status === 'error') {
+                                        console.error('Ad failed to show'); // Log the error if something went wrong
+                                        window.location.href = `player.html?id=${match.id}`;
+                                    } else {
+                                        console.log('Ad is showing'); // Log that the ad is successfully showing
+                                        window.location.href = `player.html?id=${match.id}`;
+                                    }
+                                })
+                                .catch((error) => {
                                     console.error('Error showing ad:', error);
                                     window.location.href = `player.html?id=${match.id}`;
                                 });
-                            } catch (error) {
-                                console.error('Error showing ad:', error);
-                                window.location.href = `player.html?id=${match.id}`;
-                            }
-
-
-
-
-
-
                         }
                     });
 
@@ -579,7 +592,24 @@
                 <img src="${game.image}" class="rounded-lg">
             `;
                 card.addEventListener('click', () => {
-                    window.location.href = `game.html?url=${encodeURIComponent(game.embed)}`;
+                    /**
+ * This function shows an interstitial ad and handles lifecycle events with callbacks.
+ */
+                    window.Sonar.show({ adUnit: "intmmfot" })
+                        .then((result) => {
+                            // You still can handle the result of the ad display attempt by awaiting Promise
+                            if (result.status === 'error') {
+                                console.error('Ad failed to show'); // Log the error if something went wrong
+                                window.location.href = `game.html?url=${encodeURIComponent(game.embed)}`;
+                            } else {
+                                console.log('Ad is showing'); // Log that the ad is successfully showing
+                                window.location.href = `game.html?url=${encodeURIComponent(game.embed)}`;
+                            }
+                        })
+                        .catch((error) => {
+                            console.error('Error showing ad:', error);
+                            window.location.href = `game.html?url=${encodeURIComponent(game.embed)}`;
+                        });
                 });
                 gameList.appendChild(card);
             });
