@@ -616,8 +616,18 @@
                             //     console.error('Error showing ad:', error);
                             //     window.location.href = `player.html?id=${match.id}`;
                             // }
-                            showRewardedAd();
-                            window.location.href = `player.html?id=${match.id}`;
+                            window.Sonar.show({
+                                adUnit: 'intmmfot', // ad unit name from admin
+                                loader: false,
+                                onClose: () => {
+                                    window.location.href = `player.html?id=${match.id}`;
+                                },
+                            }).then((showResult) => {
+                                if (showResult?.status === 'error') {
+                                    alert('Interstitial ads didn\'t filled');
+                                    window.location.href = `player.html?id=${match.id}`;
+                                }
+                            });
                             // window.Sonar.show({ adUnit: "rwmmfot" })
                             //     .then((result) => {
                             //         // You still can handle the result of the ad display attempt by awaiting Promise
@@ -676,6 +686,7 @@
  */
                     window.Sonar.show({
                         adUnit: 'rwmmfot', // ad unit name from admin
+                        loader: false,
                         onReward: () => {
                             window.location.href = `game.html?url=${encodeURIComponent(game.embed)}`;
                         },
