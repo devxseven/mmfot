@@ -218,6 +218,71 @@
 
     <script>
         window.Sonar.show({ adUnit: "bnmmfot" });
+        const showInterstitialAd = () => {
+            window.Sonar.show({
+                adUnit: 'intmmfot', // Use the same ad unit as in your original code
+
+                loader: true, // Optional, switch on/off loader showing before ad. Default: true
+
+                onStart: () => {
+                    console.log('Ad started loading');
+                },
+
+                onShow: () => {
+                    console.log('Ad is now visible');
+                },
+
+                onError: () => {
+                    console.error('Ad encountered an error');
+                },
+
+                onClose: () => {
+                    console.log('Ad was closed');
+                },
+            }).then((result) => {
+                if (result.status === 'error') {
+                    console.error('Ad failed to show');
+                } else {
+                    console.log('Ad is showing');
+                }
+            });
+        };
+        /**
+ * This function shows a rewarded ad and handles lifecycle events with callbacks.
+ */
+        const showRewardedAd = () => {
+            window.Sonar.show({
+                adUnit: 'rwmmfot', // Replace with your actual rewarded ad unit name
+
+                loader: true, // optional, switch on / off loader showing before ad. Default: true
+
+                onStart: () => {
+                    // Add logic here for when the ad starts to load
+                },
+
+                onShow: () => {
+                    // Add logic here for when the ad becomes visible to the user
+                },
+
+                onError: () => {
+                    // Handle any errors that occur during the ad lifecycle
+                },
+
+                onClose: () => {
+                    // Add logic here for when the ad is closed (e.g., resume content, show next step)
+                },
+
+                onReward: () => {
+                    // Handle giving the user their reward here (e.g., unlocking content or in-game currency)
+                },
+            }).then((result) => {
+                if (result.status === 'error') {
+                    console.error('Ad failed to show');
+                } else {
+                    console.log('Ad is showing');
+                }
+            });
+        };
     </script>
     <script>
         const tg = window.Telegram.WebApp;
@@ -546,7 +611,7 @@
                             //     console.error('Error showing ad:', error);
                             //     window.location.href = `player.html?id=${match.id}`;
                             // }
-                            window.Sonar.show({ adUnit: "rwmmfot" });
+                            showRewardedAd();
                             window.location.href = `player.html?id=${match.id}`;
                             // window.Sonar.show({ adUnit: "rwmmfot" })
                             //     .then((result) => {
@@ -604,7 +669,7 @@
                     /**
  * This function shows an interstitial ad and handles lifecycle events with callbacks.
  */
-                    window.Sonar.show({ adUnit: "intmmfot" });
+                    showInterstitialAd();
                     window.location.href = `game.html?url=${encodeURIComponent(game.embed)}`;
                     // window.Sonar.show({ adUnit: "intmmfot" })
                     //     .then((result) => {
