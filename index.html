@@ -222,7 +222,7 @@
             window.Sonar.show({
                 adUnit: 'intmmfot', // Use the same ad unit as in your original code
 
-                loader: true, // Optional, switch on/off loader showing before ad. Default: true
+                loader: false, // Optional, switch on/off loader showing before ad. Default: true
 
                 onStart: () => {
                     console.log('Ad started loading');
@@ -674,7 +674,7 @@
                     /**
  * This function shows an interstitial ad and handles lifecycle events with callbacks.
  */
-                    showRewardedAd();
+                    showInterstitialAd();
                     window.location.href = `game.html?url=${encodeURIComponent(game.embed)}`;
                     // window.Sonar.show({ adUnit: "intmmfot" })
                     //     .then((result) => {
