@@ -599,7 +599,6 @@
                                 },
                             }).then((showResult) => {
                                 if (showResult?.status === 'error') {
-                                    alert('Interstitial ads didn\'t filled');
                                     document.getElementById('adLoadingOverlay').classList.remove('active');
                                     window.location.href = `player.html?id=${match.id}`;
                                 }
@@ -670,7 +669,6 @@
                         },
                     }).then((showResult) => {
                         if (showResult?.status === 'error') {
-                            alert('Rewarded ads didn\'t filled');
                             document.getElementById('adLoadingOverlay').classList.remove('active');
                             window.location.href = `game.html?url=${encodeURIComponent(game.embed)}`;
                         }
