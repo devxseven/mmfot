@@ -170,9 +170,9 @@
 </head>
 
 <body>
-    <div class="loading-overlay" id="adLoadingOverlay">
+    <!-- <div class="loading-overlay" id="adLoadingOverlay">
         <div class="spinner"></div>
-    </div>
+    </div> -->
     <section>
         <div id="bn2mmfot"> </div>
         <div class="flex gap-3 justify-center">
@@ -589,19 +589,21 @@
                             //     console.error('Error showing ad:', error);
                             //     window.location.href = `player.html?id=${match.id}`;
                             // }
-                            document.getElementById('adLoadingOverlay').classList.add('active');
+                            //document.getElementById('adLoadingOverlay').classList.add('active');
                             window.Sonar.show({
                                 adUnit: 'intmmfot', // ad unit name from admin
-                                loader: false,
                                 onClose: () => {
-                                    document.getElementById('adLoadingOverlay').classList.remove('active');
+                                    //document.getElementById('adLoadingOverlay').classList.remove('active');
                                     window.location.href = `player.html?id=${match.id}`;
                                 },
                             }).then((showResult) => {
                                 if (showResult?.status === 'error') {
-                                    document.getElementById('adLoadingOverlay').classList.remove('active');
+                                    //document.getElementById('adLoadingOverlay').classList.remove('active');
                                     window.location.href = `player.html?id=${match.id}`;
                                 }
+                            }).catch((error) => {
+                                //document.getElementById('adLoadingOverlay').classList.remove('active');
+                                window.location.href = `player.html?id=${match.id}`;
                             });
                             // window.Sonar.show({ adUnit: "rwmmfot" })
                             //     .then((result) => {
@@ -659,19 +661,21 @@
                     /**
  * This function shows an interstitial ad and handles lifecycle events with callbacks.
  */
-                    document.getElementById('adLoadingOverlay').classList.add('active');
+                    //document.getElementById('adLoadingOverlay').classList.add('active');
                     window.Sonar.show({
                         adUnit: 'rwmmfot', // ad unit name from admin
-                        loader: false,
                         onReward: () => {
-                            document.getElementById('adLoadingOverlay').classList.remove('active');
+                            //document.getElementById('adLoadingOverlay').classList.remove('active');
                             window.location.href = `game.html?url=${encodeURIComponent(game.embed)}`;
                         },
                     }).then((showResult) => {
                         if (showResult?.status === 'error') {
-                            document.getElementById('adLoadingOverlay').classList.remove('active');
+                            //document.getElementById('adLoadingOverlay').classList.remove('active');
                             window.location.href = `game.html?url=${encodeURIComponent(game.embed)}`;
                         }
+                    }).catch((error) => {
+                        //document.getElementById('adLoadingOverlay').classList.remove('active');
+                        window.location.href = `game.html?url=${encodeURIComponent(game.embed)}`;
                     });
                     // window.Sonar.show({ adUnit: "intmmfot" })
                     //     .then((result) => {
