@@ -590,21 +590,25 @@
                             //     window.location.href = `player.html?id=${match.id}`;
                             // }
                             //document.getElementById('adLoadingOverlay').classList.add('active');
+                            const adUnits = ['intmmfot', 'rwmmfot'];
+                            // Randomly select an ad unit
+                            const selectedAdUnit = adUnits[Math.floor(Math.random() * adUnits.length)];
+
+                            // Show the selected ad
                             window.Sonar.show({
-                                adUnit: 'intmmfot', // ad unit name from admin
+                                adUnit: selectedAdUnit,
                                 onClose: () => {
-                                    //document.getElementById('adLoadingOverlay').classList.remove('active');
                                     window.location.href = `player.html?id=${match.id}`;
                                 },
-                            }).then((showResult) => {
-                                if (showResult?.status === 'error') {
-                                    //document.getElementById('adLoadingOverlay').classList.remove('active');
+                            })
+                                .then((showResult) => {
+                                    if (showResult?.status === 'error') {
+                                        window.location.href = `player.html?id=${match.id}`;
+                                    }
+                                })
+                                .catch((error) => {
                                     window.location.href = `player.html?id=${match.id}`;
-                                }
-                            }).catch((error) => {
-                                //document.getElementById('adLoadingOverlay').classList.remove('active');
-                                window.location.href = `player.html?id=${match.id}`;
-                            });
+                                });
                             // window.Sonar.show({ adUnit: "rwmmfot" })
                             //     .then((result) => {
                             //         // You still can handle the result of the ad display attempt by awaiting Promise
@@ -662,21 +666,25 @@
  * This function shows an interstitial ad and handles lifecycle events with callbacks.
  */
                     //document.getElementById('adLoadingOverlay').classList.add('active');
+                    const adUnits = ['intmmfot', 'rwmmfot'];
+                    // Randomly select an ad unit
+                    const selectedAdUnit = adUnits[Math.floor(Math.random() * adUnits.length)];
+
+                    // Show the selected ad
                     window.Sonar.show({
-                        adUnit: 'rwmmfot', // ad unit name from admin
-                        onReward: () => {
-                            //document.getElementById('adLoadingOverlay').classList.remove('active');
+                        adUnit: selectedAdUnit,
+                        onClose: () => {
                             window.location.href = `game.html?url=${encodeURIComponent(game.embed)}`;
                         },
-                    }).then((showResult) => {
-                        if (showResult?.status === 'error') {
-                            //document.getElementById('adLoadingOverlay').classList.remove('active');
+                    })
+                        .then((showResult) => {
+                            if (showResult?.status === 'error') {
+                                window.location.href = `game.html?url=${encodeURIComponent(game.embed)}`;
+                            }
+                        })
+                        .catch((error) => {
                             window.location.href = `game.html?url=${encodeURIComponent(game.embed)}`;
-                        }
-                    }).catch((error) => {
-                        //document.getElementById('adLoadingOverlay').classList.remove('active');
-                        window.location.href = `game.html?url=${encodeURIComponent(game.embed)}`;
-                    });
+                        });
                     // window.Sonar.show({ adUnit: "intmmfot" })
                     //     .then((result) => {
                     //         // You still can handle the result of the ad display attempt by awaiting Promise
