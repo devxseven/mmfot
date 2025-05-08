@@ -268,7 +268,18 @@
         <div id="bnmmfot"> </div>
     </section>
     <script>
-        window.Sonar.show({ adUnit: "bnmmfot" });
+        window.Sonar.show({ adUnit: "bnmmfot" }).then((showResult) => {
+            if (showResult?.status === 'error') {
+                console.error('Ad bnmmfot failed to show');
+                // Optionally hide bnmmfot div if desired
+                document.getElementById('bnmmfot').style.display = 'none';
+            } else {
+                console.log('Ad bnmmfot is showing');
+            }
+        }).catch((error) => {
+            console.error('Error with bnmmfot ad:', error);
+            document.getElementById('bnmmfot').style.display = 'none'; // Hide bnmmfot div on error
+        });
     </script>
     <script>
         let art; // Declare art globally to avoid "art is not defined" error

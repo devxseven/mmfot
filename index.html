@@ -14,6 +14,7 @@
     <!-- <script src='//whephiwums.com/sdk.js' data-zone='9233664' data-sdk='show_9233664'></script> -->
     <!-- <script src="https://js.mbidadm.com/in-stream-ad-admanager/tma.js"></script>
     <script src="https://w.tads.me/widget.js" async></script> -->
+    <!-- <script src="https://static.sonartech.io/lib/1.0.0/sonar.js?appId=app_9eebc533&isDebug=true"></script> -->
     <script src="https://static.sonartech.io/lib/1.0.0/sonar.js?appId=app_9eebc533"></script>
     <style>
         html {
@@ -259,8 +260,29 @@
     </script> -->
 
     <script>
-        window.Sonar.show({ adUnit: "bn2mmfot" });
-        window.Sonar.show({ adUnit: "bnmmfot" });
+        window.Sonar.show({ adUnit: "bn2mmfot" }).then((showResult) => {
+            if (showResult?.status === 'error') {
+                console.error('Ad bn2mmfot failed to show');
+                document.getElementById('bn2mmfot').style.display = 'none'; // Hide bn2mmfot div on error
+            } else {
+                console.log('Ad bn2mmfot is showing');
+            }
+        }).catch((error) => {
+            console.error('Error with bn2mmfot ad:', error);
+            document.getElementById('bn2mmfot').style.display = 'none'; // Hide bn2mmfot div on error
+        });
+        window.Sonar.show({ adUnit: "bnmmfot" }).then((showResult) => {
+            if (showResult?.status === 'error') {
+                console.error('Ad bnmmfot failed to show');
+                // Optionally hide bnmmfot div if desired
+                document.getElementById('bnmmfot').style.display = 'none';
+            } else {
+                console.log('Ad bnmmfot is showing');
+            }
+        }).catch((error) => {
+            console.error('Error with bnmmfot ad:', error);
+            document.getElementById('bnmmfot').style.display = 'none'; // Hide bnmmfot div on error
+        });
     </script>
     <script>
         const tg = window.Telegram.WebApp;
@@ -677,20 +699,20 @@
             `;
                 card.addEventListener('click', () => {
                     window.Sonar.show({
-                            adUnit: 'rwmmfot', // ad unit name from admin
-                            onClose: () => {
-                                window.location.href = `game.html?url=${encodeURIComponent(game.embed)}`;
-                            },
-                            onReward: () => {
-                                window.location.href = `game.html?url=${encodeURIComponent(game.embed)}`;
-                            },
-                        }).then((showResult) => {
-                            if (showResult?.status === 'error') {
-                                window.location.href = `game.html?url=${encodeURIComponent(game.embed)}`;
-                            }
-                        }).catch((error) => {
+                        adUnit: 'rwmmfot', // ad unit name from admin
+                        onClose: () => {
                             window.location.href = `game.html?url=${encodeURIComponent(game.embed)}`;
-                        });
+                        },
+                        onReward: () => {
+                            window.location.href = `game.html?url=${encodeURIComponent(game.embed)}`;
+                        },
+                    }).then((showResult) => {
+                        if (showResult?.status === 'error') {
+                            window.location.href = `game.html?url=${encodeURIComponent(game.embed)}`;
+                        }
+                    }).catch((error) => {
+                        window.location.href = `game.html?url=${encodeURIComponent(game.embed)}`;
+                    });
                 });
                 gameList.appendChild(card);
             });
