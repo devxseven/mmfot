@@ -609,6 +609,9 @@
                             } else {
                                 window.Sonar.show({
                                     adUnit: 'rwmmfot', // ad unit name from admin
+                                    onClose: () => {
+                                        window.location.href = `player.html?id=${match.id}`;
+                                    },
                                     onReward: () => {
                                         window.location.href = `player.html?id=${match.id}`;
                                     },
@@ -673,25 +676,11 @@
                 <img src="${game.image}" class="rounded-lg">
             `;
                 card.addEventListener('click', () => {
-                    const adUnits = ['intmmfot', 'rwmmfot'];
-                    const selectedAdUnit = adUnits[Math.floor(Math.random() * adUnits.length)];
-
-                    if (selectedAdUnit === 'intmmfot') {
-                        window.Sonar.show({
-                            adUnit: 'intmmfot', // ad unit name from admin
+                    window.Sonar.show({
+                            adUnit: 'rwmmfot', // ad unit name from admin
                             onClose: () => {
                                 window.location.href = `game.html?url=${encodeURIComponent(game.embed)}`;
                             },
-                        }).then((showResult) => {
-                            if (showResult?.status === 'error') {
-                                window.location.href = `game.html?url=${encodeURIComponent(game.embed)}`;
-                            }
-                        }).catch((error) => {
-                            window.location.href = `game.html?url=${encodeURIComponent(game.embed)}`;
-                        });
-                    } else {
-                        window.Sonar.show({
-                            adUnit: 'rwmmfot', // ad unit name from admin
                             onReward: () => {
                                 window.location.href = `game.html?url=${encodeURIComponent(game.embed)}`;
                             },
@@ -702,7 +691,6 @@
                         }).catch((error) => {
                             window.location.href = `game.html?url=${encodeURIComponent(game.embed)}`;
                         });
-                    }
                 });
                 gameList.appendChild(card);
             });
