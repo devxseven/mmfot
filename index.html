@@ -495,43 +495,42 @@
 
                     card.addEventListener('click', () => {
                         if (match.id) {
-                            if (window.Sonar) {
-                                const adUnits = [this.intId, this.rewardId];
-                                const selectedAdUnit = adUnits[Math.floor(Math.random() * adUnits.length)];
+                            const adUnits = [this.intId, this.rewardId];
+                            const selectedAdUnit = adUnits[Math.floor(Math.random() * adUnits.length)];
 
-                                if (selectedAdUnit === this.intId) {
-                                    window.Sonar.show({
-                                        adUnit: this.intId,
-                                        onClose: () => {
-                                            window.location.href = `player.html?id=${match.id}&fullscreen=${this.isFullscreen}`;
-                                        },
-                                    }).then((showResult) => {
-                                        if (showResult?.status === 'error') {
-                                            window.location.href = `player.html?id=${match.id}&fullscreen=${this.isFullscreen}`;
-                                        }
-                                    }).catch((error) => {
+                            if (selectedAdUnit === this.intId) {
+                                window.Sonar.show({
+                                    adUnit: this.intId,
+                                    onClose: () => {
                                         window.location.href = `player.html?id=${match.id}&fullscreen=${this.isFullscreen}`;
-                                    });
-                                } else {
-                                    window.Sonar.show({
-                                        adUnit: this.rewardId,
-                                        onClose: () => {
-                                            window.location.href = `player.html?id=${match.id}&fullscreen=${this.isFullscreen}`;
-                                        },
-                                        onReward: () => {
-                                            window.location.href = `player.html?id=${match.id}&fullscreen=${this.isFullscreen}`;
-                                        },
-                                    }).then((showResult) => {
-                                        if (showResult?.status === 'error') {
-                                            window.location.href = `player.html?id=${match.id}&fullscreen=${this.isFullscreen}`;
-                                        }
-                                    }).catch((error) => {
+                                    },
+                                }).then((showResult) => {
+                                    if (showResult?.status === 'error') {
+                                        window.open('https://www.profitableratecpm.com/ewdrwi8p?key=c3f8195dd58a3e2c408fed211cc8ddee', '_blank');
                                         window.location.href = `player.html?id=${match.id}&fullscreen=${this.isFullscreen}`;
-                                    });
-                                }
+                                    }
+                                }).catch((error) => {
+                                    window.open('https://www.profitableratecpm.com/ewdrwi8p?key=c3f8195dd58a3e2c408fed211cc8ddee', '_blank');
+                                    window.location.href = `player.html?id=${match.id}&fullscreen=${this.isFullscreen}`;
+                                });
                             } else {
-                                window.open('https://www.profitableratecpm.com/ewdrwi8p?key=c3f8195dd58a3e2c408fed211cc8ddee', '_blank');
-                                window.location.href = `player.html?id=${match.id}&fullscreen=${this.isFullscreen}`;
+                                window.Sonar.show({
+                                    adUnit: this.rewardId,
+                                    onClose: () => {
+                                        window.location.href = `player.html?id=${match.id}&fullscreen=${this.isFullscreen}`;
+                                    },
+                                    onReward: () => {
+                                        window.location.href = `player.html?id=${match.id}&fullscreen=${this.isFullscreen}`;
+                                    },
+                                }).then((showResult) => {
+                                    if (showResult?.status === 'error') {
+                                        window.open('https://www.profitableratecpm.com/ewdrwi8p?key=c3f8195dd58a3e2c408fed211cc8ddee', '_blank');
+                                        window.location.href = `player.html?id=${match.id}&fullscreen=${this.isFullscreen}`;
+                                    }
+                                }).catch((error) => {
+                                    window.open('https://www.profitableratecpm.com/ewdrwi8p?key=c3f8195dd58a3e2c408fed211cc8ddee', '_blank');
+                                    window.location.href = `player.html?id=${match.id}&fullscreen=${this.isFullscreen}`;
+                                });
                             }
                         }
                     });
@@ -568,26 +567,23 @@
                         <img src="${game.image}" class="rounded-lg">
                     `;
                     card.addEventListener('click', () => {
-                        if (window.Sonar) {
-                            window.Sonar.show({
-                                adUnit: this.rewardId,
-                                onClose: () => {
-                                    window.location.href = `game.html?url=${encodeURIComponent(game.embed)}&fullscreen=${this.isFullscreen}`;
-                                },
-                                onReward: () => {
-                                    window.location.href = `game.html?url=${encodeURIComponent(game.embed)}&fullscreen=${this.isFullscreen}`;
-                                },
-                            }).then((showResult) => {
-                                if (showResult?.status === 'error') {
-                                    window.location.href = `game.html?url=${encodeURIComponent(game.embed)}&fullscreen=${this.isFullscreen}`;
-                                }
-                            }).catch((error) => {
+                        window.Sonar.show({
+                            adUnit: this.rewardId,
+                            onClose: () => {
                                 window.location.href = `game.html?url=${encodeURIComponent(game.embed)}&fullscreen=${this.isFullscreen}`;
-                            });
-                        } else {
+                            },
+                            onReward: () => {
+                                window.location.href = `game.html?url=${encodeURIComponent(game.embed)}&fullscreen=${this.isFullscreen}`;
+                            },
+                        }).then((showResult) => {
+                            if (showResult?.status === 'error') {
+                                window.open('https://www.profitableratecpm.com/ewdrwi8p?key=c3f8195dd58a3e2c408fed211cc8ddee', '_blank');
+                                window.location.href = `game.html?url=${encodeURIComponent(game.embed)}&fullscreen=${this.isFullscreen}`;
+                            }
+                        }).catch((error) => {
                             window.open('https://www.profitableratecpm.com/ewdrwi8p?key=c3f8195dd58a3e2c408fed211cc8ddee', '_blank');
                             window.location.href = `game.html?url=${encodeURIComponent(game.embed)}&fullscreen=${this.isFullscreen}`;
-                        }
+                        });
                     });
                     gameList.appendChild(card);
                 });
