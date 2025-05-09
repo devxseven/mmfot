@@ -171,14 +171,10 @@
 </head>
 
 <body>
-    <!-- <div class="loading-overlay" id="adLoadingOverlay">
-        <div class="spinner"></div>
-    </div> -->
     <section>
-        <div id="bn2mmfot"> </div>
         <div class="flex gap-3 justify-center">
             <button id="fullscreen_btn"
-                class="btn text-[11px] md:text-[14px] px-3 py-1 mb-4 rounded-lg shadow-lg button h-auto min-h-[40px]">
+                class="btn text-[11px] md:text-[14px] px-3 py-1 mb-4 rounded-lg shadow-lg button h-auto min-h-[40px] no-hover">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 md:w-7 md:h-7 fill-current"
                     viewBox="0 -960 960 960" fill="var(--tg-theme-text-color, #222)">
                     <path
@@ -187,7 +183,7 @@
                 Change Fullscreen
             </button>
             <button id="reload_btn"
-                class="btn text-[11px] md:text-[14px] px-3 py-1 mb-4 rounded-lg shadow-lg button h-auto min-h-[40px]">
+                class="btn text-[11px] md:text-[14px] px-3 py-1 mb-4 rounded-lg shadow-lg button h-auto min-h-[40px] no-hover">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 md:w-7 md:h-7 fill-current"
                     viewBox="0 -960 960 960" fill="var(--tg-theme-text-color, #222)">
                     <path
@@ -196,126 +192,65 @@
                 Reload
             </button>
         </div>
-        <h5 class="text-[11px] md:text-[14px] font-bold mb-4 hidden">version 1.1 beta</h5>
+        <h5 class="text-[11px] md:text-[14px] font-bold mb-4 hidden">version 2.0 beta</h5>
+        <div id="bn2mmfot"></div>
         <h2 class="text-xl font-bold mb-4">Football Schedule Fixtures</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4" id="matchList"></div>
         <div id="loader" class="loader">
             <div class="spinner"></div>
         </div>
-        <div id="bnmmfot"> </div>
+        <div id="bnmmfot"></div>
         <h2 class="text-xl font-bold my-4">Sports Games</h2>
         <div class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 gap-4" id="gameList"></div>
     </section>
-    <!-- <script>
-
-        window.initCdTma?.({ id: 2008250 }).then(show => window.show = show).catch(e => console.log(e))
-    </script>
-    <script>
-        const initTadsWidget = function () {
-            const adsNotFoundCallback = () => {
-                console.log('No ads found to show');
-                // Write your code here in case we couldn't display ad
-            };
-
-            function initAdController() {
-                const adController = window.tads.init({
-                    widgetId: 457,
-                    debug: false, // Use 'true' for development and 'false' for production
-                    onShowReward: (adId) => {
-                        console.log('Show ad:', adId);
-                        // Write code here for reward user after ad showed or delete this func onShowReward
-                    },
-                    onClickReward: (adId) => {
-                        console.log('Click on ad:', adId);
-                        // Write code for reward user after ad cliked or delete this func onClickReward
-                    },
-                    onAdsNotFound: adsNotFoundCallback
-                });
-
-                adController.loadAd()
-                    .then(() => adController.showAd())
-                    .catch((err) => {
-                        console.log(err);
-                        adsNotFoundCallback();
-                    });
-            }
-
-            if (window.tads && window.tads.init) {
-                initAdController();
-            } else {
-                let tadsInterval = setInterval(() => {
-                    if (window.tads && window.tads.init) {
-                        clearInterval(tadsInterval);
-                        initAdController();
-                    }
-                }, 100);
-            }
-        };
-
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initTadsWidget);
-        } else {
-            initTadsWidget();
-        }
-    </script> -->
 
     <script>
         window.Sonar.show({ adUnit: "bn2mmfot" }).then((showResult) => {
             if (showResult?.status === 'error') {
-                console.error('Ad bn2mmfot failed to show');
-                document.getElementById('bn2mmfot').style.display = 'none'; // Hide bn2mmfot div on error
-            } else {
-                console.log('Ad bn2mmfot is showing');
+                document.getElementById('bn2mmfot').style.display = 'none';
             }
         }).catch((error) => {
-            console.error('Error with bn2mmfot ad:', error);
-            document.getElementById('bn2mmfot').style.display = 'none'; // Hide bn2mmfot div on error
+            document.getElementById('bn2mmfot').style.display = 'none';
         });
         window.Sonar.show({ adUnit: "bnmmfot" }).then((showResult) => {
             if (showResult?.status === 'error') {
-                console.error('Ad bnmmfot failed to show');
-                // Optionally hide bnmmfot div if desired
                 document.getElementById('bnmmfot').style.display = 'none';
-            } else {
-                console.log('Ad bnmmfot is showing');
             }
         }).catch((error) => {
-            console.error('Error with bnmmfot ad:', error);
-            document.getElementById('bnmmfot').style.display = 'none'; // Hide bnmmfot div on error
+            document.getElementById('bnmmfot').style.display = 'none';
         });
     </script>
     <script>
-        const tg = window.Telegram.WebApp;
-        tg.ready();
-        tg.expand();
-        tg.BackButton.hide();
+        const tg = window.Telegram?.WebApp;
+        if (tg) {
+            tg.ready();
+            tg.expand();
+            tg.BackButton.hide();
+        }
 
         const MMFotApp = {
             encryptionKey: "devxseven",
             apiFirst: "ghp_",
             apiSecond: "Lb8tjXZ9BggZwnUpJWneZ7NMa7Cmmo4bjZ4H",
-            now: moment.tz("Asia/Yangon"),
+            now: moment(),
+            matchHour: 3.5,
+            intId: "intmmfot",
+            rewardId: "rwmmfot",
+            isFullscreen: false,
 
             init() {
-                tg.ready();
-                tg.expand();
-                this.initFullscreen();
+                if (tg) {
+                    tg.ready();
+                    tg.expand();
+                    this.initFullscreen();
+                }
                 this.initReload();
-                this.initTelegramCloud();
+                this.initLocalStorage();
+                this.fetchGames().then(games => this.displayGames(games));
             },
 
-            // initBackButton() {
-            //     tg.BackButton.show();
-            //     tg.BackButton.onClick(() => {
-            //         tg.showConfirm('Do you want to exit the app?', (confirmed) => {
-            //             if (confirmed) {
-            //                 tg.close(); // Close the app if "OK" is clicked
-            //             }
-            //             // If "Cancel" is clicked, do nothing
-            //         });
-            //     });
-            // },
             initFullscreen() {
+                if (!tg) return;
                 const fullscreenBtn = document.getElementById('fullscreen_btn');
                 fullscreenBtn.addEventListener('click', () => this.toggleFullscreen(fullscreenBtn));
 
@@ -327,75 +262,38 @@
                         tg.showAlert('Fullscreen failed: ' + params.error);
                     }
                 });
-
-                // Load the fullscreen state from cloud storage
-                tg.CloudStorage.getItem('fullscreen', function (err, value) {
-                    if (!err && value) {
-                        if (value === 'yes') {
-                            Telegram.WebApp.requestFullscreen();
-                            fullscreenBtn.innerHTML = `
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 md:w-7 md:h-7 fill-current" viewBox="0 -960 960 960"
-                                fill="var(--tg-theme-text-color, #222)">
-                                <path 
-                                    d="M240-120v-120H120v-80h200v200h-80Zm400 0v-200h200v80H720v120h-80ZM120-640v-80h120v-120h80v200H120Zm520 0v-200h80v120h120v80H640Z"/>
-                            </svg>
-                            Exit Fullscreen`;
-                        } else {
-                            Telegram.WebApp.exitFullscreen();
-                            fullscreenBtn.innerHTML = `
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 md:w-7 md:h-7 fill-current" viewBox="0 -960 960 960"
-                                fill="var(--tg-theme-text-color, #222)">
-                                <path
-                                    d="M120-120v-200h80v120h120v80H120Zm520 0v-80h120v-120h80v200H640ZM120-640v-200h200v80H200v120h-80Zm640 0v-120H640v-80h200v200h-80Z" />
-                            </svg>
-                            Change Fullscreen`;
-                        }
-                    }
-                });
-
                 this.updateFullscreenButton(fullscreenBtn);
             },
 
             toggleFullscreen(el) {
                 if (tg.isFullscreen) {
                     tg.exitFullscreen();
-                    this.saveFullscreenState('no');
+                    this.isFullscreen = false;
                 } else {
                     tg.requestFullscreen();
-                    this.saveFullscreenState('yes');
+                    this.isFullscreen = true;
                 }
-            },
-
-            saveFullscreenState(state) {
-                const key = 'fullscreen';
-                const value = state;
-
-                tg.CloudStorage.setItem(key, value, (err, saved) => {
-                    if (err) {
-                        tg.showAlert('Error: ' + err);
-                    } else if (saved) {
-                        console.log('Fullscreen state saved:', value);
-                    }
-                });
             },
 
             updateFullscreenButton(el) {
                 if (tg.isFullscreen) {
                     el.innerHTML = `
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 md:w-7 md:h-7 fill-current" viewBox="0 -960 960 960"
-                                fill="var(--tg-theme-text-color, #222)">
-                                <path 
-                                    d="M240-120v-120H120v-80h200v200h-80Zm400 0v-200h200v80H720v120h-80ZM120-640v-80h120v-120h80v200H120Zm520 0v-200h80v120h120v80H640Z"/>
-                            </svg>
-                            Exit Fullscreen`;
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 md:w-7 md:h-7 fill-current" viewBox="0 -960 960 960"
+                            fill="var(--tg-theme-text-color, #222)">
+                            <path 
+                                d="M240-120v-120H120v-80h200v200h-80Zm400 0v-200h200v80H720v120h-80ZM120-640v-80h120v-120h80v200H120Zm520 0v-200h80v120h120v80H640Z"/>
+                        </svg>
+                        Exit Fullscreen`;
+                    this.isFullscreen = true;
                 } else {
                     el.innerHTML = `
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 md:w-7 md:h-7 fill-current" viewBox="0 -960 960 960"
-                                fill="var(--tg-theme-text-color, #222)">
-                                <path
-                                    d="M120-120v-200h80v120h120v80H120Zm520 0v-80h120v-120h80v200H640ZM120-640v-200h200v80H200v120h-80Zm640 0v-120H640v-80h200v200h-80Z" />
-                            </svg>
-                            Change Fullscreen`;
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 md:w-7 md:h-7 fill-current" viewBox="0 -960 960 960"
+                            fill="var(--tg-theme-text-color, #222)">
+                            <path
+                                d="M120-120v-200h80v120h120v80H120Zm520 0v-80h120v-120h80v200H640ZM120-640v-200h200v80H200v120h-80Zm640 0v-120H640v-80h200v200h-80Z" />
+                        </svg>
+                        Change Fullscreen`;
+                    this.isFullscreen = false;
                 }
             },
 
@@ -416,16 +314,32 @@
                 document.getElementById('loader').classList.add('hidden');
             },
 
-            initTelegramCloud() {
+            initLocalStorage() {
                 this.showLoader();
                 const key = 'ghp_';
                 const defaultValue = 'QfJD9SzUBB6pRkQA26fo18WJJP0kcH1b5SzQ';
 
-                // Check if the key exists in CloudStorage
-                tg.CloudStorage.getItem(key, (err, value) => {
-                    if (!err && value) {
-                        // Key exists, use the value to load matches
-                        this.loadMatchesWithKey(key, value)
+                // Check if the key exists in localStorage
+                const storedValue = localStorage.getItem(key);
+                if (storedValue) {
+                    // Key exists, use the value to load matches
+                    this.loadMatchesWithKey(key, storedValue)
+                        .then(matches => {
+                            this.upcomingMatchesView(matches);
+                            this.hideLoader();
+                        })
+                        .catch(error => {
+                            console.error('Error initializing app:', error);
+                            document.getElementById('matchList').innerHTML = '<p class="text-center text-red-500">Error initializing app.</p>';
+                            this.hideLoader();
+                        });
+                } else {
+                    // Key doesn't exist, set the default value
+                    try {
+                        localStorage.setItem(key, defaultValue);
+                        console.log('Data Saved to localStorage!');
+                        // Use the newly set value to load matches
+                        this.loadMatchesWithKey(key, defaultValue)
                             .then(matches => {
                                 this.upcomingMatchesView(matches);
                                 this.hideLoader();
@@ -435,39 +349,21 @@
                                 document.getElementById('matchList').innerHTML = '<p class="text-center text-red-500">Error initializing app.</p>';
                                 this.hideLoader();
                             });
-                    } else {
-                        // Key doesn't exist or error occurred, set the default value
-                        tg.CloudStorage.setItem(key, defaultValue, (setErr, saved) => {
-                            if (setErr) {
-                                console.error('Error saving to CloudStorage:', setErr);
-                                // Fallback to loadMatches without key
-                                this.loadMatches()
-                                    .then(matches => {
-                                        this.upcomingMatchesView(matches);
-                                        this.hideLoader();
-                                    })
-                                    .catch(error => {
-                                        console.error('Error initializing app:', error);
-                                        document.getElementById('matchList').innerHTML = '<p class="text-center text-red-500">Error initializing app.</p>';
-                                        this.hideLoader();
-                                    });
-                            } else if (saved) {
-                                console.log('Data Saved!');
-                                // Use the newly set value to load matches
-                                this.loadMatchesWithKey(key, defaultValue)
-                                    .then(matches => {
-                                        this.upcomingMatchesView(matches);
-                                        this.hideLoader();
-                                    })
-                                    .catch(error => {
-                                        console.error('Error initializing app:', error);
-                                        document.getElementById('matchList').innerHTML = '<p class="text-center text-red-500">Error initializing app.</p>';
-                                        this.hideLoader();
-                                    });
-                            }
-                        });
+                    } catch (error) {
+                        console.error('Error saving to localStorage:', error);
+                        // Fallback to loadMatches without key
+                        this.loadMatches()
+                            .then(matches => {
+                                this.upcomingMatchesView(matches);
+                                this.hideLoader();
+                            })
+                            .catch(error => {
+                                console.error('Error initializing app:', error);
+                                document.getElementById('matchList').innerHTML = '<p class="text-center text-red-500">Error initializing app.</p>';
+                                this.hideLoader();
+                            });
                     }
-                });
+                }
             },
 
             decryptString(encryptedBase64, key) {
@@ -509,9 +405,8 @@
                         throw new Error('Network response was not ok');
                     }
                     const encryptedData = await response.json();
-                    // Decrypt the data
                     const decryptedData = this.decryptObject(encryptedData, this.encryptionKey);
-                    return decryptedData.context || []; // Return the context array
+                    return decryptedData.context || [];
                 } catch (error) {
                     console.error('Error fetching/decrypting matches:', error);
                     document.getElementById('matchList').innerHTML = '<p class="text-center text-red-500">Error loading matches.</p>';
@@ -531,7 +426,7 @@
                     const data = await response.json();
                     const content = JSON.parse(atob(data.content));
                     const decryptedData = this.decryptObject(content, this.encryptionKey);
-                    return decryptedData.context || []; // Return the context array
+                    return decryptedData.context || [];
                 } catch (error) {
                     console.error('Error fetching/decrypting matches:', error);
                     document.getElementById('matchList').innerHTML = '<p class="text-center text-red-500">Error loading matches.</p>';
@@ -551,10 +446,13 @@
 
             upcomingMatchesView(matches) {
                 const matchList = document.getElementById('matchList');
+                const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
                 const upcomingMatches = matches.filter(match => {
-                    if (!match.date || !match.time) return false;
-                    const matchDateTime = moment.tz(`${match.date} ${match.time}`, 'MMM D hh:mm A', "Asia/Yangon");
-                    return this.now.isBefore(matchDateTime.clone().add(3, 'hours'));
+                    if (!match.timestamp) return false;
+                    // Convert Unix timestamp (seconds) to milliseconds for moment
+                    const matchDateTime = moment.tz(match.timestamp * 1000, userTimezone);
+                    return this.now.isBefore(matchDateTime.clone().add(this.matchHour, 'hours'));
                 });
 
                 if (upcomingMatches.length === 0) {
@@ -563,167 +461,129 @@
                 }
 
                 upcomingMatches.forEach(match => {
-                    const matchDateTime = moment.tz(`${match.date} ${match.time}`, 'MMM D hh:mm A', "Asia/Yangon");
+                    // Convert timestamp to user's local timezone
+                    const matchDateTime = moment.tz(match.timestamp * 1000, userTimezone);
                     const tenMinutesBefore = matchDateTime.clone().subtract(10, 'minutes');
-                    const threeHoursAfter = matchDateTime.clone().add(3, 'hours');
+                    const threeHoursAfter = matchDateTime.clone().add(this.matchHour, 'hours');
 
                     const isLive = this.now.isBetween(tenMinutesBefore, threeHoursAfter);
+
+                    // Format date and time for display in user's local timezone
+                    const formattedDate = matchDateTime.format('MMM D');
+                    const formattedTime = matchDateTime.format('hh:mm A');
 
                     const card = document.createElement('div');
                     card.className = 'card shadow-xl p-1 flex flex-col items-center';
                     card.innerHTML = `
-                        <h2 class="text-xs md:text-sm p-1 font-bold text-center league">${match.league || ''}</h2>
-                        <div class="grid grid-cols-11 gap-2 w-full text-center mt-2">
-                            <div class="col-span-4 flex flex-col items-center home-name">
-                                <img src="${match.home_img || ''}" alt="Home Team" class="w-12 h-12 object-contain" onerror="this.src='default-image.png'">
-                                <p class="text-[9px] md:text-[11px] pt-1 font-semibold">${match.home_name || ''}</p>
-                            </div>
-                            <div class="col-span-3 flex flex-col items-center match-date match-time">
-                                <p class="text-xs md:text-sm font-semibold">${match.date || ''}</p>
-                                <p class="text-xs md:text-sm font-bold">${match.time || ''}</p>
-                                ${isLive ? '<p class="text-xs md:text-sm text-red-500 font-bold animate-beat">⬤ LIVE</p>' : ''}
-                            </div>
-                            <div class="col-span-4 flex flex-col items-center away-name">
-                                <img src="${match.away_img || ''}" alt="Away Team" class="w-12 h-12 object-contain" onerror="this.src='default-image.png'">
-                                <p class="text-[9px] md:text-[11px] pt-1 font-semibold">${match.away_name || ''}</p>
-                            </div>
-                        </div>
-                    `;
+            <h2 class="text-xs md:text-sm p-1 font-bold text-center league">${match.league || ''}</h2>
+            <div class="grid grid-cols-11 gap-2 w-full text-center mt-2">
+                <div class="col-span-4 flex flex-col items-center home-name">
+                    <img src="${match.home_img || ''}" alt="Home Team" class="w-12 h-12 object-contain" onerror="this.src='default-image.png'">
+                    <p class="text-[9px] md:text-[11px] pt-1 font-semibold">${match.home_name || ''}</p>
+                </div>
+                <div class="col-span-3 flex flex-col items-center match-date match-time">
+                    <p class="text-xs md:text-sm font-semibold">${formattedDate || ''}</p>
+                    <p class="text-xs md:text-sm font-bold">${formattedTime || ''}</p>
+                    ${isLive ? '<p class="text-xs md:text-sm text-red-500 font-bold animate-beat">⬤ LIVE</p>' : ''}
+                </div>
+                <div class="col-span-4 flex flex-col items-center away-name">
+                    <img src="${match.away_img || ''}" alt="Away Team" class="w-12 h-12 object-contain" onerror="this.src='default-image.png'">
+                    <p class="text-[9px] md:text-[11px] pt-1 font-semibold">${match.away_name || ''}</p>
+                </div>
+            </div>
+        `;
 
                     card.addEventListener('click', () => {
                         if (match.id) {
-
-                            // show_9233664().then(() => {
-                            //     window.location.href = `player.html?id=${match.id}`;
-                            // }).catch(error => {
-                            //     console.error('Error showing ad:', error);
-                            //     window.location.href = `player.html?id=${match.id}`;
-                            // });
-                            // try {
-                            //     window.show?.().then(() => {
-                            //         console.log('tma ad played')
-                            //         window.location.href = `player.html?id=${match.id}`;
-                            //     }).catch(error => {
-                            //         console.error('Error showing ad:', error);
-                            //         window.location.href = `player.html?id=${match.id}`;
-                            //     });
-                            // } catch (error) {
-                            //     console.error('Error showing ad:', error);
-                            //     window.location.href = `player.html?id=${match.id}`;
-                            // }
-                            //document.getElementById('adLoadingOverlay').classList.add('active');
-                            const adUnits = ['intmmfot', 'rwmmfot'];
+                            const adUnits = [this.intId, this.rewardId];
                             const selectedAdUnit = adUnits[Math.floor(Math.random() * adUnits.length)];
 
-                            if (selectedAdUnit === 'intmmfot') {
+                            if (selectedAdUnit === this.intId) {
                                 window.Sonar.show({
-                                    adUnit: 'intmmfot', // ad unit name from admin
+                                    adUnit: this.intId,
                                     onClose: () => {
-                                        window.location.href = `player.html?id=${match.id}`;
+                                        window.location.href = `player.html?id=${match.id}&fullscreen=${this.isFullscreen}`;
                                     },
                                 }).then((showResult) => {
                                     if (showResult?.status === 'error') {
-                                        window.location.href = `player.html?id=${match.id}`;
+                                        window.location.href = `player.html?id=${match.id}&fullscreen=${this.isFullscreen}`;
                                     }
                                 }).catch((error) => {
-                                    window.location.href = `player.html?id=${match.id}`;
+                                    window.location.href = `player.html?id=${match.id}&fullscreen=${this.isFullscreen}`;
                                 });
                             } else {
                                 window.Sonar.show({
-                                    adUnit: 'rwmmfot', // ad unit name from admin
+                                    adUnit: this.rewardId,
                                     onClose: () => {
-                                        window.location.href = `player.html?id=${match.id}`;
+                                        window.location.href = `player.html?id=${match.id}&fullscreen=${this.isFullscreen}`;
                                     },
                                     onReward: () => {
-                                        window.location.href = `player.html?id=${match.id}`;
+                                        window.location.href = `player.html?id=${match.id}&fullscreen=${this.isFullscreen}`;
                                     },
                                 }).then((showResult) => {
                                     if (showResult?.status === 'error') {
-                                        window.location.href = `player.html?id=${match.id}`;
+                                        window.location.href = `player.html?id=${match.id}&fullscreen=${this.isFullscreen}`;
                                     }
                                 }).catch((error) => {
-                                    window.location.href = `player.html?id=${match.id}`;
+                                    window.location.href = `player.html?id=${match.id}&fullscreen=${this.isFullscreen}`;
                                 });
                             }
-                            // window.Sonar.show({ adUnit: "rwmmfot" })
-                            //     .then((result) => {
-                            //         // You still can handle the result of the ad display attempt by awaiting Promise
-                            //         if (result.status === 'error') {
-                            //             console.error('Ad failed to show'); // Log the error if something went wrong
-                            //             window.location.href = `player.html?id=${match.id}`;
-                            //         } else {
-                            //             console.log('Ad is showing'); // Log that the ad is successfully showing
-                            //             window.location.href = `player.html?id=${match.id}`;
-                            //         }
-                            //     })
-                            //     .catch((error) => {
-                            //         console.error('Error showing ad:', error);
-                            //         window.location.href = `player.html?id=${match.id}`;
-                            //     });
                         }
                     });
 
                     matchList.appendChild(card);
                 });
             },
+
+            async fetchGames() {
+                try {
+                    const response = await fetch('games.json');
+                    if (!response.ok) throw new Error(`Network response was not ok: ${response.status}`);
+                    const data = await response.json();
+                    return data || [];
+                } catch (error) {
+                    document.getElementById('gameList').innerHTML = '<p class="text-center text-red-500">Error loading games: ' + error.message + '</p>';
+                    return [];
+                }
+            },
+
+            displayGames(games) {
+                const gameList = document.getElementById('gameList');
+                gameList.innerHTML = '';
+
+                if (games.length === 0) {
+                    gameList.innerHTML = '<p class="text-center text-gray-600">No games found.</p>';
+                    return;
+                }
+
+                games.forEach(game => {
+                    const card = document.createElement('div');
+                    card.className = 'card shadow-xl game-card cursor-pointer';
+                    card.innerHTML = `
+                        <img src="${game.image}" class="rounded-lg">
+                    `;
+                    card.addEventListener('click', () => {
+                        window.Sonar.show({
+                            adUnit: this.rewardId,
+                            onClose: () => {
+                                window.location.href = `game.html?url=${encodeURIComponent(game.embed)}&fullscreen=${this.isFullscreen}`;
+                            },
+                            onReward: () => {
+                                window.location.href = `game.html?url=${encodeURIComponent(game.embed)}&fullscreen=${this.isFullscreen}`;
+                            },
+                        }).then((showResult) => {
+                            if (showResult?.status === 'error') {
+                                window.location.href = `game.html?url=${encodeURIComponent(game.embed)}&fullscreen=${this.isFullscreen}`;
+                            }
+                        }).catch((error) => {
+                            window.location.href = `game.html?url=${encodeURIComponent(game.embed)}&fullscreen=${this.isFullscreen}`;
+                        });
+                    });
+                    gameList.appendChild(card);
+                });
+            },
         };
 
-        async function fetchGames() {
-            try {
-                const response = await fetch('games.json');
-                console.log('shine Fetch response:', response);
-                if (!response.ok) throw new Error(`shine Network response was not ok: ${response.status}`);
-                const data = await response.json();
-                return data || [];
-            } catch (error) {
-                document.getElementById('gameList').innerHTML = '<p class="text-center text-red-500">Error loading games: ' + error.message + '</p>';
-                return [];
-            }
-        }
-
-        function displayGames(games) {
-            console.log('shine Displaying games:', games);
-            const gameList = document.getElementById('gameList');
-            gameList.innerHTML = '';
-
-            if (games.length === 0) {
-                gameList.innerHTML = '<p class="text-center text-gray-600">No games found.</p>';
-                return;
-            }
-
-            games.forEach(game => {
-                const card = document.createElement('div');
-                card.className = 'card shadow-xl game-card cursor-pointer';
-                card.innerHTML = `
-                <img src="${game.image}" class="rounded-lg">
-            `;
-                card.addEventListener('click', () => {
-                    window.Sonar.show({
-                        adUnit: 'rwmmfot', // ad unit name from admin
-                        onClose: () => {
-                            window.location.href = `game.html?url=${encodeURIComponent(game.embed)}`;
-                        },
-                        onReward: () => {
-                            window.location.href = `game.html?url=${encodeURIComponent(game.embed)}`;
-                        },
-                    }).then((showResult) => {
-                        if (showResult?.status === 'error') {
-                            window.location.href = `game.html?url=${encodeURIComponent(game.embed)}`;
-                        }
-                    }).catch((error) => {
-                        window.location.href = `game.html?url=${encodeURIComponent(game.embed)}`;
-                    });
-                });
-                gameList.appendChild(card);
-            });
-        }
-
-        (async () => {
-            const games = await fetchGames();
-            displayGames(games);
-        })();
-
-        // Initialize the app
         MMFotApp.init();
     </script>
 </body>

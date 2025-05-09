@@ -243,16 +243,8 @@
         <div class="spinner"></div>
     </div>
     <section>
+        <h5 class="text-[11px] md:text-[14px] font-bold mb-4 hidden">version 2.0 beta</h5>
         <div class="flex gap-3 justify-center">
-            <button id="fullscreen_btn"
-                class="btn text-[11px] md:text-[14px] px-3 py-1 mb-4 rounded-lg shadow-lg button h-auto min-h-[40px]">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 md:w-7 md:h-7 fill-current"
-                    viewBox="0 -960 960 960" fill="var(--tg-theme-text-color, #222)">
-                    <path
-                        d="M120-120v-200h80v120h120v80H120Zm520 0v-80h120v-120h80v200H640ZM120-640v-200h200v80H200v120h-80Zm640 0v-120H640v-80h200v200h-80Z" />
-                </svg>
-                Change Fullscreen
-            </button>
             <button id="reload_btn"
                 class="btn text-[11px] md:text-[14px] px-3 py-1 mb-4 rounded-lg shadow-lg button h-auto min-h-[40px]">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 md:w-7 md:h-7 fill-current"
@@ -282,114 +274,40 @@
         });
     </script>
     <script>
-        let art; // Declare art globally to avoid "art is not defined" error
+        let art;
+        const urlParams = new URLSearchParams(window.location.search);
+        const matchId = urlParams.get('id');
+        const isUrlFullscreen = urlParams.get('fullscreen') === 'true';
+        const tg = window.Telegram?.WebApp;
 
-        const tg = window.Telegram.WebApp;
-        tg.ready();
-        tg.expand();
-        tg.BackButton.hide();
+        // Initialize Telegram WebApp if available
+        if (tg) {
+            tg.ready();
+            tg.expand();
+            tg.BackButton.hide();
+        }
 
         const MMFotApp = {
             encryptionKey: "devxseven",
             showtime: 600000,
             now: moment.tz("Asia/Yangon"),
             authKey: null,
-            isWebFullscreen: false, // Moved outside to persist across calls
-            isRotated: false, // Moved outside to persist across calls
 
             init() {
                 this.authKey = this.generateAuthKey();
-                tg.ready();
-                tg.expand();
-                this.initBackButton();
-                this.initFullscreen();
                 this.initReload();
-                this.initTelegramCloud();
-            },
-
-            initBackButton() {
-                tg.BackButton.show();
-                tg.BackButton.onClick(() => {
-                    if (this.isWebFullscreen) {
-                        // Ensure state is reset to non-fullscreen and non-rotated
-                        this.toggleRotation();
-                    } else {
-                        window.history.back();
-                    }
-                });
-            },
-
-            initFullscreen() {
-                const fullscreenBtn = document.getElementById('fullscreen_btn');
-                fullscreenBtn.addEventListener('click', () => this.toggleFullscreen(fullscreenBtn));
-
-                tg.onEvent('fullscreenChanged', () => this.updateFullscreenButton(fullscreenBtn));
-                tg.onEvent('fullscreenFailed', (params) => {
-                    if (params.error === 'ALREADY_FULLSCREEN') {
-                        this.updateFullscreenButton(fullscreenBtn);
-                    } else {
-                        tg.showAlert('Fullscreen failed: ' + params.error);
-                    }
-                });
-
-                tg.CloudStorage.getItem('fullscreen', function (err, value) {
-                    if (!err && value) {
-                        if (value === 'yes') {
-                            Telegram.WebApp.requestFullscreen();
-                            fullscreenBtn.innerHTML = `
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 md:w-7 md:h-7 fill-current" viewBox="0 -960 960 960" fill="var(--tg-theme-text-color, #222)">
-                                <path d="M240-120v-120H120v-80h200v200h-80Zm400 0v-200h200v80H720v120h-80ZM120-640v-80h120v-120h80v200H120Zm520 0v-200h80v120h120v80H640Z"/>
-                            </svg>
-                            Exit Fullscreen`;
-                        } else {
-                            Telegram.WebApp.exitFullscreen();
-                            fullscreenBtn.innerHTML = `
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 md:w-7 md:h-7 fill-current" viewBox="0 -960 960 960" fill="var(--tg-theme-text-color, #222)">
-                                <path d="M120-120v-200h80v120h120v80H120Zm520 0v-80h120v-120h80v200H640ZM120-640v-200h200v80H200v120h-80Zm640 0v-120H640v-80h200v200h-80Z" />
-                            </svg>
-                            Change Fullscreen`;
-                        }
-                    }
-                });
-
-                this.updateFullscreenButton(fullscreenBtn);
-            },
-
-            toggleFullscreen(el) {
-                if (tg.isFullscreen) {
-                    tg.exitFullscreen();
-                    this.saveFullscreenState('no');
-                } else {
-                    tg.requestFullscreen();
-                    this.saveFullscreenState('yes');
+                this.initLocalStorage();
+                if (tg) {
+                    this.initBackButton();
                 }
             },
 
-            saveFullscreenState(state) {
-                const key = 'fullscreen';
-                const value = state;
-                tg.CloudStorage.setItem(key, value, (err, saved) => {
-                    if (err) {
-                        tg.showAlert('Error: ' + err);
-                    } else if (saved) {
-                        console.log('Fullscreen state saved:', value);
-                    }
-                });
-            },
-
-            updateFullscreenButton(el) {
-                if (tg.isFullscreen) {
-                    el.innerHTML = `
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 md:w-7 md:h-7 fill-current" viewBox="0 -960 960 960" fill="var(--tg-theme-text-color, #222)">
-                                <path d="M240-120v-120H120v-80h200v200h-80Zm400 0v-200h200v80H720v120h-80ZM120-640v-80h120v-120h80v200H120Zm520 0v-200h80v120h120v80H640Z"/>
-                            </svg>
-                            Exit Fullscreen`;
-                } else {
-                    el.innerHTML = `
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 md:w-7 md:h-7 fill-current" viewBox="0 -960 960 960" fill="var(--tg-theme-text-color, #222)">
-                                <path d="M120-120v-200h80v120h120v80H120Zm520 0v-80h120v-120h80v200H640ZM120-640v-200h200v80H200v120h-80Zm640 0v-120H640v-80h200v200h-80Z" />
-                            </svg>
-                            Change Fullscreen`;
+            initBackButton() {
+                if (tg) {
+                    tg.BackButton.show();
+                    tg.BackButton.onClick(() => {
+                        window.history.back();
+                    });
                 }
             },
 
@@ -410,58 +328,51 @@
                 document.getElementById('loader').classList.add('hidden');
             },
 
-            initTelegramCloud() {
+            initLocalStorage() {
                 this.showLoader();
                 const key = 'ghp_';
                 const defaultValue = 'QfJD9SzUBB6pRkQA26fo18WJJP0kcH1b5SzQ';
 
-                // Check if the key exists in CloudStorage
-                tg.CloudStorage.getItem(key, (err, value) => {
-                    if (!err && value) {
-                        // Key exists, use the value to load matches
-                        this.loadMatchesWithKey(key, value)
+                const storedValue = localStorage.getItem(key);
+                if (storedValue) {
+                    this.loadMatchesWithKey(key, storedValue)
+                        .then(matches => {
+                            this.matchDetailView(matches);
+                            this.hideLoader();
+                        })
+                        .catch(error => {
+                            console.error('Error initializing app:', error);
+                            document.getElementById('match-player').innerHTML = '<p class="text-center text-red-500">Error initializing app.</p>';
+                            this.hideLoader();
+                        });
+                } else {
+                    try {
+                        localStorage.setItem(key, defaultValue);
+                        console.log('Data Saved to localStorage!');
+                        this.loadMatchesWithKey(key, defaultValue)
                             .then(matches => {
                                 this.matchDetailView(matches);
                                 this.hideLoader();
                             })
                             .catch(error => {
                                 console.error('Error initializing app:', error);
-                                document.getElementById('matchList').innerHTML = '<p class="text-center text-red-500">Error initializing app.</p>';
+                                document.getElementById('match-player').innerHTML = '<p class="text-center text-red-500">Error initializing app.</p>';
                                 this.hideLoader();
                             });
-                    } else {
-                        // Key doesn't exist or error occurred, set the default value
-                        tg.CloudStorage.setItem(key, defaultValue, (setErr, saved) => {
-                            if (setErr) {
-                                console.error('Error saving to CloudStorage:', setErr);
-                                // Fallback to loadMatches without key
-                                this.loadMatches()
-                                    .then(matches => {
-                                        this.matchDetailView(matches);
-                                        this.hideLoader();
-                                    })
-                                    .catch(error => {
-                                        console.error('Error initializing app:', error);
-                                        document.getElementById('match-player').innerHTML = '<p class="text-center text-red-500">Error loading match.</p>';
-                                        this.hideLoader();
-                                    });
-                            } else if (saved) {
-                                console.log('Data Saved!');
-                                // Use the newly set value to load matches
-                                this.loadMatchesWithKey(key, defaultValue)
-                                    .then(matches => {
-                                        this.matchDetailView(matches);
-                                        this.hideLoader();
-                                    })
-                                    .catch(error => {
-                                        console.error('Error initializing app:', error);
-                                        document.getElementById('matchList').innerHTML = '<p class="text-center text-red-500">Error initializing app.</p>';
-                                        this.hideLoader();
-                                    });
-                            }
-                        });
+                    } catch (error) {
+                        console.error('Error saving to localStorage:', error);
+                        this.loadMatches()
+                            .then(matches => {
+                                this.matchDetailView(matches);
+                                this.hideLoader();
+                            })
+                            .catch(error => {
+                                console.error('Error initializing app:', error);
+                                document.getElementById('match-player').innerHTML = '<p class="text-center text-red-500">Error loading match.</p>';
+                                this.hideLoader();
+                            });
                     }
-                });
+                }
             },
 
             decryptString(encryptedBase64, key) {
@@ -502,12 +413,11 @@
                         throw new Error('Network response was not ok');
                     }
                     const encryptedData = await response.json();
-                    // Decrypt the data
                     const decryptedData = this.decryptObject(encryptedData, this.encryptionKey);
-                    return decryptedData.context || []; // Return the context array
+                    return decryptedData.context || [];
                 } catch (error) {
                     console.error('Error fetching/decrypting matches:', error);
-                    document.getElementById('matchList').innerHTML = '<p class="text-center text-red-500">Error loading matches.</p>';
+                    document.getElementById('match-player').innerHTML = '<p class="text-center text-red-500">Error loading matches.</p>';
                     return [];
                 }
             },
@@ -524,27 +434,23 @@
                     const data = await response.json();
                     const content = JSON.parse(atob(data.content));
                     const decryptedData = this.decryptObject(content, this.encryptionKey);
-                    return decryptedData.context || []; // Filter matches by key and value
+                    return decryptedData.context || [];
                 } catch (error) {
                     console.error('Error fetching/decrypting matches with key:', error);
-                    document.getElementById('matchList').innerHTML = '<p class="text-center text-red-500">Error loading matches.</p>';
+                    document.getElementById('match-player').innerHTML = '<p class="text-center text-red-500">Error loading matches.</p>';
                     return [];
                 }
             },
 
             async loadMatches() {
-                const matches = await this.fetchAndDecryptJson();
-                return matches;
+                return await this.fetchAndDecryptJson();
             },
 
             async loadMatchesWithKey(key, value) {
-                const matches = await this.fetchAndDecryptJsonWithKey(key, value);
-                return matches;
+                return await this.fetchAndDecryptJsonWithKey(key, value);
             },
 
             matchDetailView(matches) {
-                const urlParams = new URLSearchParams(window.location.search);
-                const matchId = urlParams.get('id');
                 if (!matchId) {
                     document.getElementById('match-player').innerHTML = '<p class="text-center text-red-500">No match ID provided.</p>';
                     return;
@@ -555,7 +461,8 @@
                     return;
                 }
 
-                const matchDateTime = moment.tz(`${match.date} ${match.time}`, 'MMM D hh:mm A', "Asia/Yangon");
+                const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                const matchDateTime = moment.tz(match.timestamp * 1000, userTimezone);
                 const distance = matchDateTime.diff(this.now);
 
                 this.displayMatchDetails(match, distance);
@@ -573,6 +480,10 @@
                 const card = document.createElement('div');
                 card.className = 'card shadow-xl p-1 flex flex-col items-center';
                 const isLive = distance <= this.showtime;
+                const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                const matchDateTime = moment.tz(match.timestamp * 1000, userTimezone);
+                const formattedDate = matchDateTime.format('MMM D');
+                const formattedTime = matchDateTime.format('hh:mm A');
                 card.innerHTML = `
                     <h2 class="text-xs md:text-sm p-1 font-bold text-center league">${match.league || ''}</h2>
                     <div class="grid grid-cols-11 gap-2 w-full text-center mt-2">
@@ -581,8 +492,8 @@
                             <p class="text-[9px] md:text-[11px] pt-1 font-semibold">${match.home_name || ''}</p>
                         </div>
                         <div class="col-span-3 flex flex-col items-center match-date match-time">
-                            <p class="text-xs md:text-sm font-semibold">${match.date || ''}</p>
-                            <p class="text-xs md:text-sm font-bold">${match.time || ''}</p>
+                            <p class="text-xs md:text-sm font-semibold">${formattedDate || ''}</p>
+                            <p class="text-xs md:text-sm font-bold">${formattedTime || ''}</p>
                             ${isLive ? '<p class="text-xs md:text-sm text-red-500 font-bold animate-beat">⬤ LIVE</p>' : ''}
                         </div>
                         <div class="col-span-4 flex flex-col items-center away-name">
@@ -626,29 +537,24 @@
             showArtPlayer(match) {
                 const matchPlayer = document.getElementById('match-player');
                 matchPlayer.innerHTML = `
-            <div id="art-player" class="w-full bg-black my-4"></div>
-            <div id="player-buttons"></div>`;
+                    <div id="art-player" class="w-full bg-black my-4"></div>
+                    <div id="player-buttons"></div>`;
 
-                // Function to update art-player height dynamically
                 const updateHeight = () => {
                     const artPlayer = document.getElementById('art-player');
                     if (!artPlayer) return;
 
-                    const viewportHeight = Telegram.WebApp.viewportHeight || window.innerHeight;
+                    const viewportHeight = tg ? (tg.viewportHeight || window.innerHeight) : window.innerHeight;
                     const customHeight = viewportHeight * 0.4;
                     artPlayer.style.height = `${customHeight}px`;
                 };
 
-                // Initial height set
                 updateHeight();
-
-                // Listen for viewport changes in Telegram Web App
-                Telegram.WebApp.onEvent('viewportChanged', updateHeight);
-
-                // Fallback: Listen for window resize
+                if (tg) {
+                    tg.onEvent('viewportChanged', updateHeight);
+                }
                 window.addEventListener('resize', updateHeight);
 
-                // Add player buttons
                 this.addPlayerButtons(match);
             },
 
@@ -723,34 +629,25 @@
                         tooltip: 'Fullscreen',
                         index: 100,
                         click: async function () {
-                            // Helper function to wrap tg.CloudStorage.getItem in a Promise
-                            const getFullscreenSetting = () => {
-                                return new Promise((resolve, reject) => {
-                                    tg.CloudStorage.getItem('fullscreen', (err, value) => {
-                                        if (err) reject(err);
-                                        else resolve(value);
-                                    });
-                                });
-                            };
-                            // Helper function for 1-second delay
                             const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
                             try {
-                                const value = await getFullscreenSetting();
-                                if (value === 'no') {
-                                    if (!art.fullscreenWeb) {
-                                        await Telegram.WebApp.requestFullscreen(); // Assumes requestFullscreen returns a Promise
-                                        await delay(1000); // 1-second delay
-                                        art.fullscreenWeb = !art.fullscreenWeb;
+                                if (tg) {
+                                    if (!isUrlFullscreen) {
+                                        if (!art.fullscreenWeb) {
+                                            await Telegram.WebApp.requestFullscreen(); // Assumes requestFullscreen returns a Promise
+                                            await delay(1000); // 1-second delay
+                                            art.fullscreenWeb = !art.fullscreenWeb;
+                                        } else {
+                                            Telegram.WebApp.exitFullscreen();
+                                            art.fullscreenWeb = !art.fullscreenWeb;
+                                        }
                                     } else {
-                                        Telegram.WebApp.exitFullscreen(); // Assumes exitFullscreen is synchronous
                                         art.fullscreenWeb = !art.fullscreenWeb;
                                     }
-                                } else {
-                                    art.fullscreenWeb = !art.fullscreenWeb;
                                 }
                             } catch (err) {
                                 console.error('Error accessing fullscreen setting:', err);
+                                art.fullscreen = !art.fullscreen;
                             }
                         },
                     }],
@@ -789,21 +686,9 @@
                     const controlsLeft = artPlayer.querySelector('.art-video-player.art-mobile .art-controls-left');
                     const videoLeft = artPlayer.querySelector('.art-video-player.art-mobile .art-video');
 
-                    // Helper function to wrap tg.CloudStorage.getItem in a Promise
-                    const getFullscreenSetting = () => {
-                        return new Promise((resolve, reject) => {
-                            tg.CloudStorage.getItem('fullscreen', (err, value) => {
-                                if (err) reject(err);
-                                else resolve(value);
-                            });
-                        });
-                    };
-
-                    // Async function to handle fullscreen state
                     (async () => {
                         try {
-                            const value = await getFullscreenSetting();
-                            if (value === 'no' && !state) {
+                            if (!isUrlFullscreen && !state) {
                                 Telegram.WebApp.exitFullscreen();
                             }
                         } catch (err) {
@@ -832,154 +717,20 @@
                         offIcon.style.display = state ? 'inline-flex' : 'none';
                     })();
                 });
+                art.on('fullscreen', (state) => {
+                    const onIcon = document.querySelector('.art-icon-fullscreenWebOnCus');
+                    const offIcon = document.querySelector('.art-icon-fullscreenWebOffCus');
+                    if (!onIcon || !offIcon) {
+                        console.error('Fullscreen icons not found in click handler:', this.innerHTML);
+                        return;
+                    }
+                    onIcon.style.display = state ? 'none' : 'inline-flex';
+                    offIcon.style.display = state ? 'inline-flex' : 'none';
+                });
             },
 
             isMobileDevice() {
                 return /Mobi|Android|iPhone|iPad|iPod/.test(navigator.userAgent);
-            },
-
-            updateIframeHeight() {
-                const iframeWrapper = document.getElementById('iframeWrapper');
-                if (!iframeWrapper) return;
-
-                const viewportHeight = Telegram.WebApp.viewportHeight || window.innerHeight;
-                const viewportWidth = Telegram.WebApp.viewportWidth || window.innerWidth;
-
-                if (this.isWebFullscreen && this.isMobileDevice()) {
-                    iframeWrapper.style.height = `${viewportWidth}px`;
-                } else if (this.isWebFullscreen) {
-                    iframeWrapper.style.height = `${viewportHeight}px`; // Fullscreen in portrait mode
-                } else {
-                    iframeWrapper.style.height = `${viewportHeight * 0.4}px`; // Default height
-                }
-            },
-
-            // Inside MMFotApp object
-            initializeIframePlayer(iframeCode) {
-                const artPlayer = document.getElementById('art-player');
-                artPlayer.innerHTML = `
-        <div class="iframe-wrapper" id="iframeWrapper">
-            <div class="iframe-container">
-                ${iframeCode}
-            </div>
-            <div id="overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10000;"></div>
-            <button class="iframe-button" id="iframeBtn">Fullscreen</button>
-        </div>`;
-
-                // Initial height set
-                this.updateIframeHeight();
-
-                // Listen for viewport changes in Telegram Web App
-                Telegram.WebApp.onEvent('viewportChanged', () => this.updateIframeHeight());
-
-                // Fallback: Listen for window resize
-                window.addEventListener('resize', () => this.updateIframeHeight());
-
-                // Add rotation and fullscreen functionality
-                const iframeBtn = document.getElementById('iframeBtn');
-                iframeBtn.addEventListener('click', () => this.toggleRotation());
-
-                document.addEventListener('keydown', (event) => {
-                    if (event.key === 'Escape' && this.isWebFullscreen) {
-                        this.toggleRotation();
-                    }
-                });
-
-                // Manage button visibility
-                this.manageIframeButtonVisibility();
-            },
-
-            manageIframeButtonVisibility() {
-                const iframeBtn = document.getElementById('iframeBtn');
-                const overlay = document.getElementById('overlay');
-                let timeoutId = null;
-
-                const showButton = () => {
-                    if (this.isWebFullscreen) {
-                        iframeBtn.style.display = 'block';
-                        clearTimeout(timeoutId);
-                        timeoutId = setTimeout(() => {
-                            if (this.isWebFullscreen) {
-                                iframeBtn.style.display = 'none';
-                            }
-                        }, 5000); // Hide after 5 seconds only in fullscreen mode
-                    } else {
-                        iframeBtn.style.display = 'block'; // Always show in non-fullscreen mode, no timeout
-                    }
-                };
-
-                const hideButton = () => {
-                    if (this.isWebFullscreen) {
-                        iframeBtn.style.display = 'none';
-                    }
-                };
-
-                // Initial button state
-                if (this.isWebFullscreen) {
-                    showButton(); // Show "Exit" for 5 seconds in fullscreen
-                } else {
-                    iframeBtn.style.display = 'block'; // Always show "Fullscreen" when not in fullscreen
-                    clearTimeout(timeoutId); // Clear any existing timeout
-                }
-
-                // Remove any existing listeners to avoid duplicates
-                if (overlay) {
-                    overlay.removeEventListener('click', this.handleInteraction);
-                    overlay.removeEventListener('touchstart', this.handleInteraction);
-                }
-
-                // Define interaction handler with proper context
-                this.handleInteraction = () => {
-                    if (this.isWebFullscreen) {
-                        console.log('Interaction detected'); // Debug log
-                        showButton(); // Show "Exit" for 5 seconds on interaction in fullscreen
-                    }
-                };
-
-                // Add event listeners to overlay
-                if (overlay) {
-                    overlay.addEventListener('click', this.handleInteraction);
-                    overlay.addEventListener('touchstart', this.handleInteraction);
-                }
-            },
-
-            toggleRotation() {
-                this.isWebFullscreen = !this.isWebFullscreen;
-                this.isRotated = !this.isRotated;
-
-                const iframeWrapper = document.getElementById('iframeWrapper');
-                const iframeContainer = document.querySelector('.iframe-container');
-                const iframeBtn = document.getElementById('iframeBtn');
-
-                if (!iframeWrapper || !iframeContainer || !iframeBtn) return;
-
-                if (this.isWebFullscreen) {
-                    iframeWrapper.classList.add('web-fullscreen');
-                    iframeBtn.textContent = 'Exit';
-                    this.manageIframeButtonVisibility(); // Manage visibility when entering fullscreen
-                } else {
-                    iframeWrapper.classList.remove('web-fullscreen');
-                    iframeBtn.textContent = 'Fullscreen';
-                    iframeBtn.style.display = 'block'; // Ensure "Fullscreen" is always visible
-                    this.manageIframeButtonVisibility(); // Update visibility state
-                }
-
-                if (this.isMobileDevice()) {
-                    if (this.isRotated) {
-                        iframeWrapper.classList.add('rotated');
-                        iframeContainer.classList.add('rotated');
-                        iframeBtn.textContent = 'Exit';
-                        this.manageIframeButtonVisibility(); // Manage visibility when rotated
-                    } else {
-                        iframeWrapper.classList.remove('rotated');
-                        iframeContainer.classList.remove('rotated');
-                        iframeBtn.textContent = 'Fullscreen';
-                        iframeBtn.style.display = 'block'; // Ensure "Fullscreen" is always visible
-                        this.manageIframeButtonVisibility(); // Update visibility state
-                    }
-                }
-
-                this.updateIframeHeight();
             },
 
             addPlayerButtons(match) {
@@ -997,31 +748,16 @@
                             card.className = 'custom-card card shadow-lg rounded-lg w-full max-w-[200px] text-xs md:text-base font-bold flex items-center justify-center py-4 cursor-pointer hover:scale-105 transition-transform duration-200 ease-in-out';
                             card.innerHTML = `<strong>${name}</strong>`;
 
-                            if (url.startsWith('<iframe')) {
-                                // Handle iframe links
-                                card.onclick = () => {
-                                    const cards = document.querySelectorAll('#player-buttons .custom-card');
-                                    cards.forEach(c => c.classList.remove('selected'));
-                                    card.classList.add('selected');
-                                    this.initializeIframePlayer(url);
-                                };
-                                if (index === 0) {
-                                    card.classList.add('selected');
-                                    this.initializeIframePlayer(url);
-                                }
-                            } else {
-                                // Handle stream URLs
-                                const btnUrl = this.generateStreamUrl(url, name);
-                                card.onclick = () => {
-                                    const cards = document.querySelectorAll('#player-buttons .custom-card');
-                                    cards.forEach(c => c.classList.remove('selected'));
-                                    card.classList.add('selected');
-                                    this.initializePlayer(btnUrl);
-                                };
-                                if (index === 0) {
-                                    card.classList.add('selected');
-                                    this.initializePlayer(btnUrl);
-                                }
+                            const btnUrl = this.generateStreamUrl(url, name);
+                            card.onclick = () => {
+                                const cards = document.querySelectorAll('#player-buttons .custom-card');
+                                cards.forEach(c => c.classList.remove('selected'));
+                                card.classList.add('selected');
+                                this.initializePlayer(btnUrl);
+                            };
+                            if (index === 0) {
+                                card.classList.add('selected');
+                                this.initializePlayer(btnUrl);
                             }
 
                             playerButtons.appendChild(card);
@@ -1058,7 +794,6 @@
                 }
                 return btnUrl;
             },
-
         };
 
         MMFotApp.init();

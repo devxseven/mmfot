@@ -22,20 +22,22 @@
 
         iframe {
             width: 100%;
-            flex: 1; /* Takes remaining space above the footer */
+            flex: 1;
+            /* Takes remaining space above the footer */
             border: none;
         }
 
         #bnmmfot {
             width: 100%;
-            height: 70px; /* Adjust height as needed for the ad */
+            height: 70px;
+            /* Adjust height as needed for the ad */
         }
     </style>
 </head>
 
 <body>
     <div id="bnmmfot"></div>
-    <iframe id="gameFrame" src=""></iframe>
+    <iframe id="gameFrame" src=""> </iframe>
     <script>
         window.Sonar.show({ adUnit: "bnmmfot" }).then((showResult) => {
             if (showResult?.status === 'error') {
@@ -51,6 +53,7 @@
         });
     </script>
     <script>
+
         const tg = window.Telegram.WebApp;
         tg.ready();
         tg.expand();
@@ -61,6 +64,7 @@
 
         const urlParams = new URLSearchParams(window.location.search);
         const gameUrl = urlParams.get('url');
+        const isFullscreen = urlParams.get('fullscreen') === 'true';
         if (gameUrl) {
             document.getElementById('gameFrame').src = decodeURIComponent(gameUrl);
         } else {
@@ -68,6 +72,7 @@
         }
 
         const MMFotApp = {
+
             init() {
                 this.authKey = this.generateAuthKey();
                 tg.ready();
@@ -76,16 +81,13 @@
             },
 
             initFullscreen() {
-                tg.CloudStorage.getItem('fullscreen', function (err, value) {
-                    if (!err && value) {
-                        if (value === 'yes') {
-                            Telegram.WebApp.requestFullscreen();
-                        } else {
-                            Telegram.WebApp.exitFullscreen();
-                        }
-                    }
-                });
+                if (isFullscreen) {
+                    Telegram.WebApp.requestFullscreen();
+                } else {
+                    Telegram.WebApp.exitFullscreen();
+                }
             }
+
         };
 
         MMFotApp.init();
