@@ -240,7 +240,8 @@
         #bnmmfot {
             margin-top: 15px;
             width: 100%;
-            height: 70px; /* Adjust height as needed for the ad */
+            height: 70px;
+            /* Adjust height as needed for the ad */
         }
     </style>
 </head>
@@ -297,7 +298,7 @@
         const MMFotApp = {
             encryptionKey: "devxseven",
             showtime: 600000,
-            now: moment.tz("Asia/Yangon"),
+            now: moment(),
             authKey: null,
 
             init() {
@@ -545,7 +546,8 @@
                 const matchPlayer = document.getElementById('match-player');
                 matchPlayer.innerHTML = `
                     <div id="art-player" class="w-full bg-black my-4"></div>
-                    <div id="player-buttons"></div>`;
+                    <div id="player-buttons"></div>
+        <img src="/img/info-reload.png" alt="Info" class="w-[320px] md:w-[500px] h-auto mx-auto mb-4">`;
 
                 const updateHeight = () => {
                     const artPlayer = document.getElementById('art-player');
