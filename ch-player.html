@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MM FOT</title>
+    <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.23/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/artplayer/dist/artplayer.js" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flv.js/1.6.2/flv.min.js" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/8.0.0-beta.3/hls.min.js" type="text/javascript"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--tg-theme-bg-color, #000);
+            color: var(--tg-theme-text-color, #fff);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        #art-player {
+            width: 100vw;
+            height: 100vh;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="art-player"></div>
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+        tg.expand();
+        tg.BackButton.show();
+        tg.BackButton.onClick(() => {
+            window.history.back();
+        });
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const videoUrl = urlParams.get('url') || 'https://pplive.comquas.com:5443/LiveApp/streams/rHEBIW7pjQLU1677679374164.m3u8';
+        const isFullscreen = urlParams.get('fullscreen') === 'true';
+
+        const ChannelPlayer = {
+            init() {
+                this.initPlayer();
+                this.initFullscreen();
+            },
+
+            initPlayer() {
+                if (videoUrl) {
+                    const art = new Artplayer({
+                        container: '#art-player',
+                        url: videoUrl,
+                        autoplay: true,
+                        isLive: true,
+                        fullscreenWeb: true,
+                        autoOrientation: true,
+                        layers: [{
+                            html: '<span style="color:yellow; font-weight: 700; font-size: smaller;">mmfot.com</span>',
+                            style: { position: 'absolute', top: '0px', right: '3px', opacity: '1' },
+                        }],
+                        controls: [{
+                            position: 'left',
+                            html: '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FFF"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-110h80v280H520v-80h168q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q77 0 139-44t87-116h84q-28 106-114 173t-196 67Z"/></svg>',
+                            index: 20,
+                            tooltip: 'Reload',
+                            click: function () {
+                                art.url = videoUrl;
+                            },
+                        }, {
+                            position: 'left',
+                            html: '<span class="dot" style="height: 6px; width: 6px; background-color: red; border-radius: 50%; display: inline-block; margin-right: 5px;"></span><span style="color:white; font-weight: 900; font-size: smaller;">Live</span>',
+                            index: 40,
+                        }, {
+                            position: 'right',
+                            html: `
+                        <i class="art-icon art-icon-fullscreenWebOnCus" style="display: inline-flex;">
+                            <svg class="icon" width="22" height="22" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+                                <path fill="#fff" d="M625.778 256H768v142.222h113.778v-256h-256V256zM256 398.222V256h142.222V142.222h-256v256H256zm512 227.556V768H625.778v113.778h256v-256H768zM398.222 768H256V625.778H142.222v256h256V768z"></path>
+                            </svg>
+                        </i>
+                        <i class="art-icon art-icon-fullscreenWebOffCus" style="display: none;">
+                            <svg class="icon" width="22" height="22" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+                                <path fill="#fff" d="M768 298.667h170.667V384h-256V128H768v170.667zM341.333 384h-256v-85.333H256V128h85.333v256zM768 725.333V896h-85.333V640h256v85.333H768zM341.333 640v256H256V725.333H85.333V640h256z"></path>
+                            </svg>
+                        </i>
+                    `,
+                            tooltip: 'Fullscreen',
+                            index: 100,
+                            click: async function () {
+                                const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+                                try {
+                                    if (tg) {
+                                        if (!isFullscreen) {
+                                            if (!art.fullscreenWeb) {
+                                                await Telegram.WebApp.requestFullscreen(); // Assumes requestFullscreen returns a Promise
+                                                await delay(1000); // 1-second delay
+                                                art.fullscreenWeb = !art.fullscreenWeb;
+                                            } else {
+                                                Telegram.WebApp.exitFullscreen();
+                                                art.fullscreenWeb = !art.fullscreenWeb;
+                                            }
+                                        } else {
+                                            art.fullscreenWeb = !art.fullscreenWeb;
+                                        }
+                                    }
+                                } catch (err) {
+                                    console.error('Error accessing fullscreen setting:', err);
+                                    art.fullscreen = !art.fullscreen;
+                                }
+                            },
+                        }],
+                        customType: {
+                            m3u8: function (video, url, art) {
+                                if (Hls.isSupported()) {
+                                    if (art.hls) art.hls.destroy();
+                                    const hls = new Hls();
+                                    hls.loadSource(url);
+                                    hls.attachMedia(video);
+                                    art.hls = hls;
+                                    art.on('destroy', () => hls.destroy());
+                                } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                                    video.src = url;
+                                } else {
+                                    art.notice.show = 'Unsupported playback format: m3u8';
+                                }
+                            },
+                            flv: function (video, url, art) {
+                                if (flvjs.isSupported()) {
+                                    if (art.flv) art.flv.destroy();
+                                    const flv = flvjs.createPlayer({ type: 'flv', url });
+                                    flv.attachMediaElement(video);
+                                    flv.load();
+                                    art.flv = flv;
+                                    art.on('destroy', () => flv.destroy());
+                                } else {
+                                    art.notice.show = 'Unsupported playback format: flv';
+                                }
+                            },
+                        },
+                    });
+
+                    art.on('fullscreenWeb', (state) => {
+                        const artPlayer = document.getElementById('art-player');
+                        const controlsLeft = artPlayer.querySelector('.art-video-player.art-mobile .art-controls-left');
+                        const videoLeft = artPlayer.querySelector('.art-video-player.art-mobile .art-video');
+
+                        (async () => {
+                            try {
+                                if (!isFullscreen && !state) {
+                                    Telegram.WebApp.exitFullscreen();
+                                }
+                            } catch (err) {
+                                console.error('Error accessing fullscreen setting:', err);
+                            }
+
+                            if (state) { // fullscreenWeb is true
+                                if (videoLeft) {
+                                    videoLeft.style.position = 'absolute';
+                                    videoLeft.style.left = `var(--tg-safe-area-inset-top, 0px)`;
+                                }
+                                controlsLeft.style.paddingLeft = `calc(var(--tg-safe-area-inset-top, 0px) + var(--tg-content-safe-area-inset-top, 0px) + 15px)`;
+                            } else { // fullscreenWeb is false
+                                if (videoLeft) {
+                                    videoLeft.style.left = '0';
+                                }
+                                controlsLeft.style.paddingLeft = '0';
+                            }
+                            const onIcon = document.querySelector('.art-icon-fullscreenWebOnCus');
+                            const offIcon = document.querySelector('.art-icon-fullscreenWebOffCus');
+                            if (!onIcon || !offIcon) {
+                                console.error('Fullscreen icons not found in click handler:', this.innerHTML);
+                                return;
+                            }
+                            onIcon.style.display = state ? 'none' : 'inline-flex';
+                            offIcon.style.display = state ? 'inline-flex' : 'none';
+                        })();
+                    });
+                    art.on('fullscreen', (state) => {
+                        const onIcon = document.querySelector('.art-icon-fullscreenWebOnCus');
+                        const offIcon = document.querySelector('.art-icon-fullscreenWebOffCus');
+                        if (!onIcon || !offIcon) {
+                            console.error('Fullscreen icons not found in click handler:', this.innerHTML);
+                            return;
+                        }
+                        onIcon.style.display = state ? 'none' : 'inline-flex';
+                        offIcon.style.display = state ? 'inline-flex' : 'none';
+                    });
+                } else {
+                    document.body.innerHTML = '<p class="text-center text-red-500">No video URL provided.</p>';
+                }
+            },
+
+            initFullscreen() {
+                if (isFullscreen) {
+                    tg.requestFullscreen();
+                } else {
+                    tg.exitFullscreen();
+                }
+            }
+        };
+
+        ChannelPlayer.init();
+    </script>
+</body>
+
+</html>
