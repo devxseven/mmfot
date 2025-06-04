@@ -330,7 +330,7 @@
         <h2 class="text-base md:text-lg font-bold mb-2">Football Schedule Fixtures</h2>
         <div class="relative inline-block w-3/4 md:w-96 mb-4">
             <select id="matchFilter"
-                class="select select-bordered w-full px-4 py-2 md:py-4 text-base md:text-2xl font-bold rounded-lg shadow-sm">
+                class="select select-bordered w-full px-4 py-3 md:py-4 text-base md:text-2xl font-bold rounded-lg shadow-sm">
                 <option value="all">All Matches</option>
                 <option value="hot">Hot Matches</option>
                 <option value="live">Live Matches</option>
@@ -825,7 +825,7 @@
                     const card = document.createElement('div');
                     card.className = 'card shadow-xl game-card cursor-pointer';
                     card.innerHTML = `
-                        <img src="${game.image}" class="rounded-lg">
+                        <img src="${game.image}" class="rounded-lg" loading="lazy" onerror="this.src='default-image.png'">
                     `;
                     card.addEventListener('click', () => {
                         // Combine user agent and screen width for better accuracy
