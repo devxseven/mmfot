@@ -330,7 +330,7 @@
         <h2 class="text-base md:text-lg font-bold mb-2">Football Schedule Fixtures</h2>
         <div class="relative inline-block w-3/4 md:w-96 mb-4">
             <select id="matchFilter"
-                class="select select-bordered w-full px-4 py-3 md:py-4 text-base md:text-xl font-bold rounded-lg shadow-sm">
+                class="select select-bordered w-full px-4 py-3 text-base md:text-lg font-bold rounded-lg shadow-sm">
                 <option value="all">All Matches</option>
                 <option value="hot">Hot Matches</option>
                 <option value="live">Live Matches</option>
@@ -820,8 +820,8 @@
                     gameList.innerHTML = '<p class="text-center text-gray-600">No games found.</p>';
                     return;
                 }
-
-                games.forEach(game => {
+                const shuffledGames = [...games].sort(() => Math.random() - 0.5);
+                shuffledGames.forEach(game => {
                     const card = document.createElement('div');
                     card.className = 'card shadow-xl game-card cursor-pointer';
                     card.innerHTML = `
