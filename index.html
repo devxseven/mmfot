@@ -156,10 +156,11 @@
         .select {
             background-color: var(--card-bg-color, #ffffff);
             color: var(--tg-theme-text-color, #212121);
+            border: 2px solid var(--tg-theme-text-color, #212121);
         }
 
         .select:hover {
-            border-color: #6b7280;
+            border: 2px solid var(--tg-theme-text-color, #6b7280);
             /* hover:border-gray-500 */
         }
 
@@ -329,7 +330,7 @@
         <h2 class="text-base md:text-lg font-bold mb-2">Football Schedule Fixtures</h2>
         <div class="relative inline-block w-3/4 md:w-96 mb-4">
             <select id="matchFilter"
-                class="select select-bordered w-full border-gray-300 hover:border-gray-500 px-4 py-2 text-base md:text-lg font-bold rounded-lg shadow-sm">
+                class="select select-bordered w-full p-4 text-base md:text-2xl font-bold rounded-lg shadow-sm">
                 <option value="all">All Matches</option>
                 <option value="hot">Hot Matches</option>
                 <option value="live">Live Matches</option>
