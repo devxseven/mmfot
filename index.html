@@ -702,7 +702,8 @@
                 const selectedLeagues = ['Premier League', 'La Liga', 'Serie A', 'Bundesliga', 'Ligue 1', 'MLS',
                     'UEFA Champions League', 'UEFA Europa League', 'UEFA Nations League', 'Saudi Pro League', 'UEFA Conference League',
                     'Coppa Italia', 'FA Cup', 'Copa del Rey', 'AFC Champions League Elite', 'Concacaf Champions Cup',
-                    'World Cup qualification (AFC)', 'World Cup qualification (CONMEBOL)', 'AFC Asian Cup qualification'];
+                    'World Cup qualification (AFC)', 'World Cup qualification (CONMEBOL)', 'World Cup qualification (UEFA)', 'AFC Asian Cup qualification',
+                    'World Cup qualification (CONCACAF)', 'AFC Asian Cup qualification'];
                 if (this.matchFilter === 'hot') {
                     return matches.filter(match => selectedLeagues.includes(match.league));
                 } else if (this.matchFilter === 'live') {
