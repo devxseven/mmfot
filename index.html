@@ -14,6 +14,12 @@
         src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.43/moment-timezone-with-data.min.js"></script>
     <script src="https://static.sonartech.io/lib/1.0.0/sonar.js?appId=app_9eebc533"></script>
     <script src="https://w.tads.me/widget.js" async></script>
+    <script src="https://inapp.telega.io/sdk/v1/sdk.js"></script>
+    <script>
+        const ads = window.TelegaIn.AdsController.create_miniapp({
+            token: '2a1611dc-890b-4323-a29c-f0d9307914aa'
+        });
+    </script>
     <style>
         html {
             overscroll-behavior-x: none;
@@ -571,30 +577,9 @@
 
             async function showAd() {
                 try {
-                    if (!tadsReady) {
-                        await waitForTadsReady();
-                        tadsReady = true;
-                    }
-
-                    if (!adController) {
-                        adController =
-                            window.tads.controllers?.[WIDGET_ID] ||
-                            window.tads.init({
-                                widgetId: WIDGET_ID,
-                                type: TYPE,
-                                debug: IS_DEBUG,
-                                onShowReward: onShowRewardCallback,
-                                onAdsNotFound: onAdsNotFound,
-                            });
-                    }
-
-                    if (adController && typeof adController.showAd === "function") {
-                        adController.showAd().catch((err) => {
-                            console.error(`Error showing ad:`, err);
-                        });
-                    } else {
-                        console.warn("Ad controller not ready");
-                    }
+                    ads.ad_show({
+                        adBlockUuid: "4dc4f818-6576-4812-b6c9-ab87905eef60"
+                    });
                 } catch (err) {
                     console.error("Failed to load TADS:", err);
                 }
