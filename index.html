@@ -13,6 +13,7 @@
     <script
         src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.43/moment-timezone-with-data.min.js"></script>
     <script src="https://static.sonartech.io/lib/1.0.0/sonar.js?appId=app_9eebc533"></script>
+    <script src="https://w.tads.me/widget.js" async></script>
     <style>
         html {
             overscroll-behavior-x: none;
@@ -321,6 +322,15 @@
                 </svg>
                 Reload
             </button>
+            <button id="watch_ad_btn"
+                class="btn text-sm md:text-base px-4 py-2 rounded-lg shadow-lg button h-auto min-h-[44px] no-hover flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 fill-current" viewBox="0 -960 960 960"
+                    fill="var(--tg-theme-text-color, #212121)">
+                    <path
+                        d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-110h80v280H520v-80h168q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q77 0 139-44t87-116h84q-28 106-114 173t-196 67Z" />
+                </svg>
+                Watch Ad
+            </button>
         </div>
     </section>
 
@@ -336,6 +346,7 @@
                 <option value="live">Live Matches</option>
             </select>
         </div>
+        <div id="tads-container-457"></div>
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4" id="matchList">
             <!-- Skeleton placeholders -->
             <div class="skeleton-container">
@@ -471,6 +482,133 @@
             Games
         </button>
     </nav>
+
+    <script>
+        const initTadsWidget = function () {
+            const adsNotFoundCallback = () => {
+                console.log('No ads found to show');
+                // Write your code here in case we couldn't display ad
+            };
+
+            function initAdController() {
+                const adController = window.tads.init({
+                    widgetId: 457,
+                    debug: false, // Use 'true' for development and 'false' for production
+                    onShowReward: (adId) => {
+                        console.log('Show ad:', adId);
+                        // Write code here for reward user after ad showed or delete this func onShowReward
+                    },
+                    onClickReward: (adId) => {
+                        console.log('Click on ad:', adId);
+                        // Write code for reward user after ad cliked or delete this func onClickReward
+                    },
+                    onAdsNotFound: adsNotFoundCallback
+                });
+
+                adController.loadAd()
+                    .then(() => adController.showAd())
+                    .catch((err) => {
+                        console.log(err);
+                        adsNotFoundCallback();
+                    });
+            }
+
+            if (window.tads && window.tads.init) {
+                initAdController();
+            } else {
+                let tadsInterval = setInterval(() => {
+                    if (window.tads && window.tads.init) {
+                        clearInterval(tadsInterval);
+                        initAdController();
+                    }
+                }, 100);
+            }
+        };
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initTadsWidget);
+        } else {
+            initTadsWidget();
+        }
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const WIDGET_ID = "755"; // Replace on your WIDGET ID
+            const IS_DEBUG = false; // Replace on false in production
+            const BTN_ID = "watch_ad_btn"; // Replace on your button ID
+            const TYPE = "fullscreen";
+
+            let adController = null;
+            let tadsReady = false;
+
+            const onShowRewardCallback = (result) => {
+                console.log("Show ads, reward user:", result);
+            };
+
+            const onAdsNotFound = () => {
+                console.log("No ads found to show");
+            };
+
+            function waitForTadsReady(timeout = 5000) {
+                return new Promise((resolve, reject) => {
+                    if (window.tads && typeof window.tads.init === "function") {
+                        return resolve();
+                    }
+
+                    const start = performance.now();
+                    const iv = setInterval(() => {
+                        if (window.tads && typeof window.tads.init === "function") {
+                            clearInterval(iv);
+                            resolve();
+                        } else if (performance.now() - start > timeout) {
+                            clearInterval(iv);
+                            reject(new Error("TADS widget script not loaded"));
+                        }
+                    }, 50);
+                });
+            }
+
+            async function showAd() {
+                try {
+                    if (!tadsReady) {
+                        await waitForTadsReady();
+                        tadsReady = true;
+                    }
+
+                    if (!adController) {
+                        adController =
+                            window.tads.controllers?.[WIDGET_ID] ||
+                            window.tads.init({
+                                widgetId: WIDGET_ID,
+                                type: TYPE,
+                                debug: IS_DEBUG,
+                                onShowReward: onShowRewardCallback,
+                                onAdsNotFound: onAdsNotFound,
+                            });
+                    }
+
+                    if (adController && typeof adController.showAd === "function") {
+                        adController.showAd().catch((err) => {
+                            console.error(`Error showing ad:`, err);
+                        });
+                    } else {
+                        console.warn("Ad controller not ready");
+                    }
+                } catch (err) {
+                    console.error("Failed to load TADS:", err);
+                }
+            }
+
+            const btn = document.getElementById(BTN_ID);
+            if (!btn) {
+                console.error("Button not found:", BTN_ID);
+                return;
+            }
+
+            btn.addEventListener("click", showAd);
+        });
+    </script>
 
     <script>
         const tg = window.Telegram?.WebApp;
@@ -768,9 +906,11 @@
                                         },
                                     }).then((showResult) => {
                                         if (showResult?.status === 'error') {
+                                            window.open('https://www.profitableratecpm.com/ewdrwi8p?key=c3f8195dd58a3e2c408fed211cc8ddee', '_blank');
                                             window.location.href = `player.html?id=${match.id}&fullscreen=${this.isFullscreen}`;
                                         }
                                     }).catch((error) => {
+                                        window.open('https://www.profitableratecpm.com/ewdrwi8p?key=c3f8195dd58a3e2c408fed211cc8ddee', '_blank');
                                         window.location.href = `player.html?id=${match.id}&fullscreen=${this.isFullscreen}`;
                                     });
                                 } else {
@@ -784,9 +924,11 @@
                                         },
                                     }).then((showResult) => {
                                         if (showResult?.status === 'error') {
+                                            window.open('https://www.profitableratecpm.com/ewdrwi8p?key=c3f8195dd58a3e2c408fed211cc8ddee', '_blank');
                                             window.location.href = `player.html?id=${match.id}&fullscreen=${this.isFullscreen}`;
                                         }
                                     }).catch((error) => {
+                                        window.open('https://www.profitableratecpm.com/ewdrwi8p?key=c3f8195dd58a3e2c408fed211cc8ddee', '_blank');
                                         window.location.href = `player.html?id=${match.id}&fullscreen=${this.isFullscreen}`;
                                     });
                                 }
